@@ -74,6 +74,10 @@
 			<plugin>
 				<groupId>org.springframework.boot</groupId>
 				<artifactId>spring-boot-maven-plugin</artifactId>
+				<configuration>
+					<!-- use org.springframework.boot.loader.PropertiesLauncher -->
+					<layout>ZIP</layout>
+				</configuration>
 			</plugin>
 		</plugins>
 	</build>

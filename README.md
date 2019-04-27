@@ -1,9 +1,12 @@
 # sql-commander
 
+An SQL utility hosted within a Spring Boot application.  
+The main purpose is to provide an SQL client as a single JAR file, which can be used in environment, where no GUI and no native clients are available, to access a DB.  
+
 ## Run the application
 mvn spring-boot:run
 
-## Test using included example scripts
+## Test using included sample scripts
 In a separate terminal use the following commands
 ```
 $ cd src/main/resources/
@@ -72,3 +75,17 @@ MariaDB [(none)]> flush privileges;
 MariaDB [(none)]> exit
 $ mysql -u commander -p commanderdb
 ```
+
+### Other databases
+
+In order to use another database than the default included, you may do one of the following:
+- add a dependency to the driver in pom.xml
+- add the driver jar in the driver directory (see "Use external driver location")
+
+#### Use external driver location
+In order to use an external driver location, you can start the application as follows:
+```
+java -jar sql-commander.jar
+```
+This allows to put any additional jdbc drivers into the directory: driver.
+This location is defined in loader.properties.
