@@ -17,6 +17,7 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.boot.web.servlet.support.SpringBootServletInitializer;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.context.annotation.Profile;
 import org.springframework.http.MediaType;
 import org.springframework.jdbc.core.ResultSetExtractor;
@@ -40,11 +41,12 @@ public class Application extends SpringBootServletInitializer {
 	private static Logger logger = LoggerFactory.getLogger(Application.class);
 
 	@Autowired
+	@Lazy
 	private DataSource dataSource;
 
 	@PostMapping(value="/select",
-			consumes = "text/plain",
-			produces = {"text/csv", "application/json", "text/tab-separated-values"})
+		consumes = "text/plain",
+		produces = {"text/csv", "application/json", "text/tab-separated-values"})
 	public void executeSql(@RequestBody String sql, HttpServletResponse response, @RequestHeader("Accept") String accept) {
 		try (Connection connection = dataSource.getConnection()) {
 			ResultSet rs = connection.createStatement().executeQuery(sql);
@@ -75,12 +77,12 @@ public class Application extends SpringBootServletInitializer {
 		private final OutputStream os;
 		private final boolean tabDelimited;
 
-		public StreamingCsvResultSetExtractor(OutputStream os, boolean tabDelimited) throws IOException {
+		StreamingCsvResultSetExtractor(OutputStream os, boolean tabDelimited) {
 			this.os = os;
 			this.tabDelimited = tabDelimited;
 		}
 
-		public void extractData(final ResultSet rs) throws SQLException, IOException {
+		void extractData(final ResultSet rs) throws SQLException, IOException {
 			char separator=tabDelimited?'\t':CSVWriter.DEFAULT_SEPARATOR;
 			try (OutputStreamWriter osw = new OutputStreamWriter(os, StandardCharsets.UTF_8)) {
 				try (CSVWriter writer = new CSVWriter(osw, separator,
@@ -106,7 +108,7 @@ public class Application extends SpringBootServletInitializer {
 	private class StreamingJsonResultSetExtractor implements ResultSetExtractor<Void> {
 		private final OutputStream os;
 
-		public StreamingJsonResultSetExtractor(OutputStream os) throws IOException {
+		StreamingJsonResultSetExtractor(OutputStream os) {
 			this.os = os;
 		}
 
@@ -141,7 +143,7 @@ public class Application extends SpringBootServletInitializer {
 	}
 
 	private class AbortedException extends RuntimeException {
-		public AbortedException(String message, Throwable cause) {
+		AbortedException(String message, Throwable cause) {
 			super(message, cause);
 		}
 	}
