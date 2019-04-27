@@ -1,0 +1,22 @@
+management:
+    endpoint:
+        health:
+            show-details: always
+    endpoints:
+        web:
+            exposure:
+                include: '*'
+spring:
+    custom:
+        datasource:
+            hikari:
+                connectionTestQuery: SELECT 1
+                connectionTimeout: 30000
+                idleTimeout: 60000
+                maximumPoolSize: 100
+                minimumIdle: 2
+                poolName: dbpool
+            type: com.zaxxer.hikari.HikariDataSource
+    jackson:
+        serialization:
+            indent_output: true

@@ -19,16 +19,19 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.context.annotation.Profile;
+import org.springframework.core.io.ClassPathResource;
+import org.springframework.core.io.Resource;
+import org.springframework.core.io.UrlResource;
 import org.springframework.http.MediaType;
 import org.springframework.jdbc.core.ResultSetExtractor;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestHeader;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.jdbc.datasource.init.ResourceDatabasePopulator;
+import org.springframework.lang.Nullable;
+import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletResponse;
 import javax.sql.DataSource;
 import java.io.*;
+import java.net.MalformedURLException;
 import java.nio.charset.StandardCharsets;
 import java.sql.Connection;
 import java.sql.ResultSet;
@@ -71,6 +74,15 @@ public class Application extends SpringBootServletInitializer {
 		} catch (Exception e) {
 			throw new RuntimeException("Failed to execute: " + sql, e);
 		}
+	}
+
+	@GetMapping("/runscript")
+	public void runSqlScript(@RequestParam String resourceUrl) throws MalformedURLException {
+		Resource resource = new UrlResource(resourceUrl);
+		ResourceDatabasePopulator databasePopulator =
+			new ResourceDatabasePopulator(false,
+				true, StandardCharsets.UTF_8.name(), resource);
+		databasePopulator.execute(dataSource);
 	}
 
 	private class StreamingCsvResultSetExtractor {
