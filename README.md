@@ -5,17 +5,22 @@ mvn spring-boot:run
 
 ## Test
 
-In another terminal use the following commands
+In a separate terminal use the following commands
 ```
+cd  src/main/resources/
 # Create a test table
-$ script/sql.sh @script/test/create.sql
+$ ./sql.sh @script/test/create.sql
 
 # Insert a new record
-$ script/sql.sh @script/test/insert.sql
+$ .sql.sh @script/test/insert.sql
 
 # Select all records from test table
-$ script/sql.sh script/sql.sh @script/test/select.sql
+$ ./sql.sh script/sql.sh @script/test/select.sql
 
 # Follow new records being created
-$ script/sql-select-follow.sh @script/test/select.sql /tmp/output
+$ ./sql-select-follow.sh @script/test/select.sql /tmp/output
 ```
+
+## Running running the bash scripts from the packaged application jar/war
+
+bash <<<$(curl -s localhost:8080/sql.sh) 
