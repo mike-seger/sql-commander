@@ -12,10 +12,10 @@ cd  src/main/resources/
 $ ./sql.sh @script/test/create.sql
 
 # Insert a new record
-$ .sql.sh @script/test/insert.sql
+$ ./sql.sh @script/test/insert.sql
 
 # Select all records from test table
-$ ./sql.sh script/sql.sh @script/test/select.sql
+$ ./sql.sh @script/test/select.sql
 
 # Follow new records being created
 $ ./sql-select-follow.sh @script/test/select.sql /tmp/output
