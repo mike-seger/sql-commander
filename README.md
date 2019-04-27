@@ -21,6 +21,6 @@ $ ./sql.sh script/sql.sh @script/test/select.sql
 $ ./sql-select-follow.sh @script/test/select.sql /tmp/output
 ```
 
-## Running running the bash scripts from the packaged application jar/war
+## Running the bash scripts from the packaged application jar/war
 
 bash <<<$(curl -s localhost:8080/sql.sh) 
