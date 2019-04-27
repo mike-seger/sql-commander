@@ -43,13 +43,14 @@ spring.custom.datasource.jdbc-url=jdbc:postgresql://server1:5432/commanderdb
 spring.custom.datasource.driver-class-name=org.postgresql.Driver
 ```
 
-#### Create a Postgres DB
+#### Create and use Postgres DB
 ```
-sudo su - postgres
-psql
+$ sudo su - postgres
+$ psql
 postgres=# alter user commander  with encrypted password 'commanderpass';
 postgres=# grant all privileges on database commanderdb to commander;
-
+postgres=# exit
+$ psql -h localhost -p 5432 -U commander -d commanderdb
 ```
 
 ### Mysql/MariaDB
@@ -61,11 +62,13 @@ spring.custom.datasource.password=dbpass
 spring.custom.datasource.driver-class-name=org.postgresql.Driver
 ```
 
-#### Create a Mysql DB
+#### Create and use Mysql DB
 ```
-sudo mysql
+$ sudo mysql
 MariaDB [(none)]> create database commanderdb default character set utf8 default collate utf8_bin;
 MariaDB [(none)]> GRANT ALL PRIVILEGES ON commanderdb.* to commander@'%' IDENTIFIED BY 'commanderpass';
 MariaDB [(none)]> GRANT ALL PRIVILEGES ON commanderdb.* to commander@'localhost' IDENTIFIED BY 'commanderpass';
 MariaDB [(none)]> flush privileges;
+MariaDB [(none)]> exit
+$ mysql -u commander -p commanderdb
 ```
