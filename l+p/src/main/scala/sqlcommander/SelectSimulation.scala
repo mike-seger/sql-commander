@@ -26,10 +26,10 @@ class SelectSimulation extends Simulation {
   val scn = scenario("Select Simulation")
     .feed(UuidFeeder.feeder)
     .repeat(1) {
-      pause(50 milliseconds)
-      .exec(session => session.set("dropCounter", dropCounter.getAndIncrement))
+      exec(session => session.set("dropCounter", dropCounter.getAndIncrement))
       .doIf(session => session("dropCounter").as[Integer] < 1) {
-        exec(http("drop create")
+        pause(50 milliseconds)
+        .exec(http("drop create")
         .get("/runscript")
         .queryParam("resourceUrl", "classpath:/static/test/create-message.sql")
         .check(status.is(200))
@@ -40,9 +40,9 @@ class SelectSimulation extends Simulation {
 //      )
     }
     .rendezVous(nUsers)
-    .repeat(5000) {
-      exec(session => session.set("insertCounter", insertCounter.getAndIncrement))
-      .doIf(session => session("insertCounter").as[Integer] < 5000) {
+    .exec(session => session.set("insertCounter", insertCounter.getAndIncrement))
+    .doIf(session => session("insertCounter").as[Integer] < 1*nUsers) {
+      repeat(1*nUsers) {
         pause(20 milliseconds)
         .exec(http("insert messages")
         .post("/update")
@@ -52,8 +52,8 @@ class SelectSimulation extends Simulation {
       )}
     }
     .rendezVous(nUsers)
-    .repeat(500) {
-      pause(500 milliseconds)
+    .repeat(100) {
+      pause(50 milliseconds)
       .exec(http("select messages")
         .post("/select")
         .header(HttpHeaderNames.ContentType, "text/plain")

@@ -1,5 +1,7 @@
 #!/bin/bash
 
+set -e
+
 if [[ ! -d "$1" || ! -f "$1/index.html" ]] ; then
 	echo "Usage: $0 <report dir>"
 	exit 1
@@ -9,7 +11,6 @@ mysed=sed
 if [[ -x "$(which gsed)" ]] ; then
     mysed=gsed
 fi
-
 
 report_dir="$1"
 
@@ -36,8 +37,8 @@ for c in "${colors[@]}" ; do
 	sedexp="${sedexp}s/${c}/gI;"
 done
 
-echo "$sedexp"
-echo "($grepexp)"
+#echo "$sedexp"
+#echo "($grepexp)"
 
 egrep -ril "($grepexp)" "$report_dir" | while read f ; do
     $mysed -i "$sedexp" "${f}"
