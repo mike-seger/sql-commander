@@ -7,15 +7,22 @@ management:
             exposure:
                 include: '*'
 server:
+#    max-treads: 1024
+#    tomcat:
+#        max-threads: "${server.max-treads}"
+#    undertow:
+#        worker-threads: "${server.max-treads}"
+#    jetty:
+#        acceptors: "${server.max-treads}"
     port: 11515
 spring:
     custom:
         datasource:
             hikari:
                 connectionTestQuery: SELECT 1
-                connectionTimeout: 30000
-                idleTimeout: 60000
-                maximumPoolSize: 100
+                connectionTimeout: 90000
+                idleTimeout: 150000
+                maximumPoolSize: 200
                 minimumIdle: 2
                 poolName: dbpool
             type: com.zaxxer.hikari.HikariDataSource
