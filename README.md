@@ -9,28 +9,29 @@ mvn spring-boot:run
 ## Test using included sample scripts
 In a separate terminal use the following commands
 ```
-$ cd src/main/resources/
-$ ./sql.sh @script/test/create.sql  # Create a test table
-$ ./sql.sh @script/test/insert.sql  # Insert a new record
-$ ./sql.sh @script/test/select.sql  # Select all records from test table
+$ cd src/main/resources/static
+$ ./sql.sh @test/create.sql  # Create a test table
+$ ./sql.sh @test/insert.sql  # Insert a new record
+$ ./sql.sh @test/select.sql  # Select all records from test table
 # Follow new records being created
 $ ./sql-select-follow.sh @script/test/select.sql /tmp/output
+$ ./sql.sh @test/drop.sql    # Drop the test table
 ```
 
 ## Running the included bash scripts from the packaged application jar/war
 ```
-bash <<<$(curl -s localhost:8080/sql.sh) 
+bash <<<$(curl -s localhost:11515/sql.sh) 
 ```
 
 ## Test using curl/API
 ```
-$ curl -s -X POST -H "Content-Type: text/plain" -d "create table x(val int)" localhost:8080/update
-$ curl -s -X POST -H "Content-Type: text/plain" -d "insert into x values($(date +%s))" localhost:8080/update
-$ curl -s -X POST -H "Content-Type: text/plain" -d "insert into x values($(date +%s))" localhost:8080/update
-$ curl -s -X POST -H "Content-Type: text/plain" -d "insert into x values($(date +%s))" localhost:8080/update
-$ curl -s -X POST -H "Content-Type: text/plain" -d "select * from x" localhost:8080/select
-$ curl -s -X POST -H "Content-Type: text/plain" -d "drop table x" localhost:8080/update
-$ curl -s localhost:8080/runscript?resourceUrl=classpath:/static/test/populate.sql
+$ curl -s -X POST -H "Content-Type: text/plain" -d "create table x(val int)" localhost:11515/update
+$ curl -s -X POST -H "Content-Type: text/plain" -d "insert into x values($(date +%s))" localhost:11515/update
+$ curl -s -X POST -H "Content-Type: text/plain" -d "insert into x values($(date +%s))" localhost:11515/update
+$ curl -s -X POST -H "Content-Type: text/plain" -d "insert into x values($(date +%s))" localhost:11515/update
+$ curl -s -X POST -H "Content-Type: text/plain" -d "select * from x" localhost:11515/select
+$ curl -s -X POST -H "Content-Type: text/plain" -d "drop table x" localhost:11515/update
+$ curl -s localhost:11515/runscript?resourceUrl=classpath:/static/test/populate.sql
 ```
 
 ## Example datasource definitions
@@ -42,8 +43,9 @@ Below are some example configurations, which you can add into e.g. config/applic
 ### Postgres
 ```
 spring.profiles.include=customds
-spring.custom.datasource.jdbc-url=jdbc:postgresql://server1:5432/commanderdb
-spring.custom.datasource.driver-class-name=org.postgresql.Driver
+spring.custom.datasource.jdbc-url=jdbc:postgresql://server:5432/commanderdb
+spring.custom.datasource.username=dbuser
+spring.custom.datasource.password=dbpass
 ```
 
 #### Create and use Postgres DB
@@ -59,10 +61,9 @@ $ psql -h localhost -p 5432 -U commander -d commanderdb
 ### Mysql/MariaDB
 ```
 spring.profiles.include=customds
-spring.custom.datasource.jdbc-url=jdbc:postgresql://server:5432/commanderdb
+spring.custom.datasource.jdbc-url=jdbc:mysql://server:3306/commanderdb
 spring.custom.datasource.username=dbuser
 spring.custom.datasource.password=dbpass
-spring.custom.datasource.driver-class-name=org.postgresql.Driver
 ```
 
 #### Create and use Mysql DB

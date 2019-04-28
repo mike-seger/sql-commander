@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-port=8080
+port=11515
 
 function usage() {
     echo "Usage: $0 [tsv|json|csv] <sql-string|@sql-file>"
