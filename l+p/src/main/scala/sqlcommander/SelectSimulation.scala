@@ -16,10 +16,15 @@ class SelectSimulation extends Simulation {
     .userAgentHeader("Java/1.8.0_131")
     .contentTypeHeader(HttpHeaderValues.TextXml)
 
+  object UuidFeeder {
+    val feeder = Iterator.continually(Map("uuid" -> java.util.UUID.randomUUID.toString()))
+  }
+
   val dropCounter = new java.util.concurrent.atomic.AtomicInteger(0)
   val insertCounter = new java.util.concurrent.atomic.AtomicInteger(0)
 
   val scn = scenario("Select Simulation")
+    .feed(UuidFeeder.feeder)
     .repeat(1) {
       pause(50 milliseconds)
       .exec(session => session.set("dropCounter", dropCounter.getAndIncrement))
@@ -35,19 +40,19 @@ class SelectSimulation extends Simulation {
 //      )
     }
     .rendezVous(nUsers)
-    .repeat(1000) {
-      pause(20 milliseconds)
-      .exec(session => session.set("insertCounter", insertCounter.getAndIncrement))
-      .doIf(session => session("insertCounter").as[Integer] < 1000) {
-        exec(http("insert messages")
+    .repeat(5000) {
+      exec(session => session.set("insertCounter", insertCounter.getAndIncrement))
+      .doIf(session => session("insertCounter").as[Integer] < 5000) {
+        pause(20 milliseconds)
+        .exec(http("insert messages")
         .post("/update")
         .header(HttpHeaderNames.ContentType, "text/plain")
-        .body(StringBody("insert into message(context_id_, text_) values('uuid', 'Message uuid')"))
+        .body(StringBody("insert into message(context_id_, text_) values('${uuid}', 'Message ${uuid}')"))
         .check(status.is(200))
       )}
     }
     .rendezVous(nUsers)
-    .repeat(100) {
+    .repeat(500) {
       pause(500 milliseconds)
       .exec(http("select messages")
         .post("/select")
