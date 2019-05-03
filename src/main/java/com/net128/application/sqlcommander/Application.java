@@ -33,10 +33,7 @@ import javax.sql.DataSource;
 import java.io.*;
 import java.net.MalformedURLException;
 import java.nio.charset.StandardCharsets;
-import java.sql.Connection;
-import java.sql.ResultSet;
-import java.sql.ResultSetMetaData;
-import java.sql.SQLException;
+import java.sql.*;
 
 @SpringBootApplication
 @RestController
@@ -63,7 +60,7 @@ public class Application extends SpringBootServletInitializer {
 			logger.error("{} while executing: {} ...", e.getMessage(),
 					sql.substring(0, Math.min(100, sql.length())));
 		} catch (Exception e) {
-			throw new RuntimeException("Failed to execute: " + sql, e);
+			handleSqlExecutionException(e, sql);
 		}
 	}
 
@@ -72,7 +69,7 @@ public class Application extends SpringBootServletInitializer {
 		try (Connection connection = dataSource.getConnection()) {
 			return connection.createStatement().executeUpdate(sql);
 		} catch (Exception e) {
-			throw new RuntimeException("Failed to execute: " + sql, e);
+			return handleSqlExecutionException(e, sql);
 		}
 	}
 
@@ -85,6 +82,18 @@ public class Application extends SpringBootServletInitializer {
 		databasePopulator.execute(dataSource);
 	}
 
+	private int handleSqlExecutionException(Exception e, String sql) {
+		String message="Failed to execute: " + sql;
+		if(logger.isDebugEnabled() || !
+				(! (e instanceof SQLSyntaxErrorException) &&
+				! e.getClass().getName().contains("OracleDatabaseException"))) {
+			throw new RuntimeException(message, e);
+		} else {
+			logger.error("{}: {}", message, e.getMessage());
+		}
+		return 0;
+	}
+	
 	private class StreamingCsvResultSetExtractor {
 		private final OutputStream os;
 		private final boolean tabDelimited;

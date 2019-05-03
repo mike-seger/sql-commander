@@ -4,7 +4,7 @@ port=11515
 
 function usage() {
     echo "Usage: $0 [tsv|json|csv] <sql-string|@sql-file>"
-    echo "tsv|json|csv: If the first argument is one of these, the the output will be accordingly. Default is tab-delimited."
+    echo "tsv|json|csv: If the first argument is one of these, then the output will be accordingly. Default is tab-delimited."
     exit 1
 }
 
