@@ -84,7 +84,7 @@ public class Application extends SpringBootServletInitializer {
 
 	private int handleSqlExecutionException(Exception e, String sql) {
 		String message="Failed to execute: " + sql;
-		if(logger.isDebugEnabled() || !
+		if(logger.isDebugEnabled() ||
 				(! (e instanceof SQLSyntaxErrorException) &&
 				! e.getClass().getName().contains("OracleDatabaseException"))) {
 			throw new RuntimeException(message, e);
