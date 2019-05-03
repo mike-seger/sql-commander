@@ -1,7 +1,7 @@
 # sql-commander
 
 An SQL utility hosted within a Spring Boot application.  
-The main purpose is to provide an SQL client as a single JAR file, which can be used in environment, where no GUI and no native clients are available, to access a DB.  
+The main purpose is to provide an SQL client as a single JAR file. It allows to access a DB in environments, where no GUI and no native clients are available.  
 
 ## Run the application
 mvn spring-boot:run
