@@ -19,13 +19,12 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.context.annotation.Profile;
-import org.springframework.core.io.ClassPathResource;
+import org.springframework.core.io.InputStreamResource;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.UrlResource;
 import org.springframework.http.MediaType;
 import org.springframework.jdbc.core.ResultSetExtractor;
 import org.springframework.jdbc.datasource.init.ResourceDatabasePopulator;
-import org.springframework.lang.Nullable;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletResponse;
@@ -48,6 +47,7 @@ public class Application extends SpringBootServletInitializer {
 		consumes = "text/plain",
 		produces = {"text/csv", "application/json", "text/tab-separated-values"})
 	public void executeSql(@RequestBody String sql, HttpServletResponse response, @RequestHeader("Accept") String accept) {
+		sql=sql.trim().replaceAll(";$", "");
 		try (Connection connection = dataSource.getConnection()) {
 			ResultSet rs = connection.createStatement().executeQuery(sql);
 			if(MediaType.APPLICATION_JSON.getType().equals(accept)) {
@@ -65,11 +65,13 @@ public class Application extends SpringBootServletInitializer {
 	}
 
 	@PostMapping("/update")
-	public int updateSql(@RequestBody String sql, HttpServletResponse response) {
-		try (Connection connection = dataSource.getConnection()) {
-			return connection.createStatement().executeUpdate(sql);
-		} catch (Exception e) {
-			return handleSqlExecutionException(e, sql);
+	public void updateSql(@RequestBody String sql, HttpServletResponse response) throws IOException {
+		try (InputStream is=new ByteArrayInputStream(sql.getBytes(StandardCharsets.UTF_8.name()))) {
+			Resource resource = new InputStreamResource(is);
+			ResourceDatabasePopulator databasePopulator =
+				new ResourceDatabasePopulator(false,
+					true, StandardCharsets.UTF_8.name(), resource);
+			databasePopulator.execute(dataSource);
 		}
 	}
 
