@@ -6,8 +6,12 @@ The main purpose is to provide an SQL client as a single JAR file. It allows to 
 ## Run the application
 mvn spring-boot:run
 
+## Execute SQL queries using web browser
+The application provides a simple SQL query form under:
+http://localhost:11515/
+
 ## Test using included sample scripts
-In a separate terminal use the following commands
+In a terminal use the following commands
 ```
 $ cd src/main/resources/static
 $ ./sql.sh @test/create.sql  # Create a test table
