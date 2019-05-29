@@ -67,6 +67,12 @@
 			<artifactId>mysql-connector-java</artifactId>
 			<version>8.0.15</version>
 		</dependency>
+
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-thymeleaf</artifactId>
+		</dependency>
+
 	</dependencies>
 
 	<build>
@@ -97,6 +103,7 @@
 			<url>https://repo.spring.io/milestone</url>
 		</repository>
 	</repositories>
+
 	<pluginRepositories>
 		<pluginRepository>
 			<id>spring-snapshots</id>

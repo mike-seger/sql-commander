@@ -25,6 +25,7 @@ import org.springframework.core.io.UrlResource;
 import org.springframework.http.MediaType;
 import org.springframework.jdbc.core.ResultSetExtractor;
 import org.springframework.jdbc.datasource.init.ResourceDatabasePopulator;
+import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletResponse;
@@ -42,6 +43,36 @@ public class Application extends SpringBootServletInitializer {
 	@Autowired
 	@Lazy
 	private DataSource dataSource;
+
+	@Controller
+	public class UiController {
+		public class SqlQuery {
+			public String query;
+
+			public void setQuery(String query) {
+				this.query = query;
+			}
+
+			public String getQuery() {
+				return query;
+			}
+		}
+
+		@GetMapping({"/sql", "/"})
+		public String sql(SqlQuery sqlQuery) {
+			return "sql";
+		}
+
+		@PostMapping("/sql")
+		public void postSql(SqlQuery sqlQuery, HttpServletResponse response) throws IOException {
+			String sql=sqlQuery.getQuery().trim().replaceAll(";$", "");
+			if(sql.toLowerCase().startsWith("select")) {
+				Application.this.executeSql(sql, response, "text/csv");
+			} else {
+				Application.this.updateSql(sql, response);
+			}
+		}
+	}
 
 	@PostMapping(value="/select",
 		consumes = "text/plain",
