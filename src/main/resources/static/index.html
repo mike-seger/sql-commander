@@ -1,0 +1,71 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+
+<html lang="en">
+
+<head>
+    <title>SQL Query</title>
+    <meta HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=UTF-8">
+    <meta http-equiv="Content-Style-Type" content="text/css">
+
+    <style>
+        html, body, form {
+            font-family: Arial, Helvetica, sans-serif;
+            font-size: 12px;
+        }
+        pre {
+            overflow-x: auto;
+            white-space: pre-wrap;
+            white-space: -moz-pre-wrap;
+            white-space: -pre-wrap;
+            white-space: -o-pre-wrap;
+            word-wrap: break-word;
+            overflow: none;
+            overflow-y: auto;
+            margin-top:20px;
+            height:80%;
+        }
+        textarea {
+            width:100%
+        }
+        hr {
+            height: 0px;
+            margin: 0;
+            margin-top: 5px;
+            border: 0;
+            border-bottom: 0.3px solid #dddddd;
+            font-size: 1px;
+            width:100%
+        }
+    </style>
+
+    <script type="text/javascript" src="js/jquery-3.4.1.min.js"></script>
+
+    <script type="text/javascript">
+      $(function() {
+        $("#search_form").bind('submit',function() {
+          var value = $('#query').val();
+           $.post('/sql',{query:value})
+            .done(function(data){ $("#search_results").html(data); })
+            .fail(function(data){ $("#search_results").html(data); });
+           return false;
+        });
+      });
+    </script>
+
+</head>
+
+<body>
+
+<div>
+    <form id="search_form" action="">
+        SQL<br>
+        <textarea rows="8" cols="100" id="query"></textarea><br>
+        <input type="submit" value="send">
+    </form>
+    <hr>
+    <pre id="search_results"></pre>
+</div>
+
+</body>
+
+</html>

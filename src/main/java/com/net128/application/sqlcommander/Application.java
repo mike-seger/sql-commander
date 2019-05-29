@@ -25,6 +25,7 @@ import org.springframework.core.io.UrlResource;
 import org.springframework.http.MediaType;
 import org.springframework.jdbc.core.ResultSetExtractor;
 import org.springframework.jdbc.datasource.init.ResourceDatabasePopulator;
+import org.springframework.jdbc.datasource.init.ScriptStatementFailedException;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
@@ -59,15 +60,15 @@ public class Application extends SpringBootServletInitializer {
 		}
 
 		@GetMapping({"/sql", "/"})
-		public String sql(SqlQuery sqlQuery) {
-			return "sql";
+		public String sql() {
+			return "index.html";
 		}
 
 		@PostMapping("/sql")
 		public void postSql(SqlQuery sqlQuery, HttpServletResponse response) throws IOException {
 			String sql=sqlQuery.getQuery().trim().replaceAll(";$", "");
 			if(sql.toLowerCase().startsWith("select")) {
-				Application.this.executeSql(sql, response, "text/csv");
+				Application.this.executeSql(sql, response, null);
 			} else {
 				Application.this.updateSql(sql, response);
 			}
@@ -77,7 +78,7 @@ public class Application extends SpringBootServletInitializer {
 	@PostMapping(value="/select",
 		consumes = "text/plain",
 		produces = {"text/csv", "application/json", "text/tab-separated-values"})
-	public void executeSql(@RequestBody String sql, HttpServletResponse response, @RequestHeader("Accept") String accept) {
+	public void executeSql(@RequestBody String sql, HttpServletResponse response, @RequestHeader("Accept") String accept) throws IOException {
 		sql=sql.trim().replaceAll(";$", "");
 		try (Connection connection = dataSource.getConnection()) {
 			ResultSet rs = connection.createStatement().executeQuery(sql);
@@ -88,9 +89,9 @@ public class Application extends SpringBootServletInitializer {
 				new StreamingCsvResultSetExtractor(response.getOutputStream(), tabDelimited).extractData(rs);
 			}
 		} catch (AbortedException e) {
-			logger.error("{} while executing: {} ...", e.getMessage(),
-					sql.substring(0, Math.min(100, sql.length())));
+			logger.error("{} while executing: {} ...", e.getMessage(), sql.substring(0, Math.min(100, sql.length())));
 		} catch (Exception e) {
+			response.getOutputStream().println(e.getMessage());
 			handleSqlExecutionException(e, sql);
 		}
 	}
@@ -100,9 +101,18 @@ public class Application extends SpringBootServletInitializer {
 		try (InputStream is=new ByteArrayInputStream(sql.getBytes(StandardCharsets.UTF_8.name()))) {
 			Resource resource = new InputStreamResource(is);
 			ResourceDatabasePopulator databasePopulator =
-				new ResourceDatabasePopulator(false,
-					true, StandardCharsets.UTF_8.name(), resource);
+					new ResourceDatabasePopulator(false,
+							true, StandardCharsets.UTF_8.name(), resource);
 			databasePopulator.execute(dataSource);
+			response.getOutputStream().println("<OK>");
+		} catch(Exception e) {
+//			String message=e;
+//			Throwable cause=e.getCause();
+//			if(cause!=null && cause.getMessage()!=null) {
+//				message+="\nCause: "+cause.getMessage();
+//			}
+			response.getOutputStream().println(e.getMessage());
+			handleSqlExecutionException(e, sql);
 		}
 	}
 
@@ -115,16 +125,15 @@ public class Application extends SpringBootServletInitializer {
 		databasePopulator.execute(dataSource);
 	}
 
-	private int handleSqlExecutionException(Exception e, String sql) {
+	private void handleSqlExecutionException(Exception e, String sql) {
 		String message="Failed to execute: " + sql;
 		if(logger.isDebugEnabled() ||
 				(! (e instanceof SQLSyntaxErrorException) &&
 				! e.getClass().getName().contains("OracleDatabaseException"))) {
-			throw new RuntimeException(message, e);
+			logger.error("{}", sql, e);
 		} else {
 			logger.error("{}: {}", message, e.getMessage());
 		}
-		return 0;
 	}
 	
 	private class StreamingCsvResultSetExtractor {
