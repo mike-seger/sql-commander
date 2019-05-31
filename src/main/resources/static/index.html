@@ -7,30 +7,34 @@
     <meta HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=UTF-8">
     <meta http-equiv="Content-Style-Type" content="text/css">
 
-    <link rel="stylesheet" type="text/css" href="css/index.css">
+    <script src="https://unpkg.com/split-grid/dist/split-grid.js"></script>
 
+    <link rel="stylesheet" type="text/css" href="css/index.css">
+    <link rel="stylesheet" type="text/css" href="css/splitgrid.css">
     <script type="text/javascript" src="js/jquery-3.4.1.min.js"></script>
+    <script src="js/ace-1.4.4.js" type="text/javascript" charset="utf-8"></script>
     <script type="text/javascript">
     $(function() {
         submission = function() {
             //var query = $('#query').val();
-            var query=editor.getValue();
+            var query=window.editor.getValue();
             var accept = $('#accept').val();
             $.post('/sql',{query:query, accept:accept})
             .done(function(data){
-                results.setValue(data, -1);
+                window.results.setValue(data, -1);
             })
-            .fail(function(data){ results.setValue(data, -1); });
+            .fail(function(data){ window.results.setValue(data, -1); });
             return false;
         };
 
-        $("#search_form").bind('submit',submission);
+        $("#query_form").bind('submit',submission);
+        $("#submit").click(submission);
         $("#accept").change(submission);
     });
 
     $(function() {
         $("#copy").click(function() {
-            var data = results.getValue(); //$('#search_results').text();
+            var data = results.getValue(); //$('#results').text();
             let copyFrom = document.createElement("textarea");
             document.body.appendChild(copyFrom);
             copyFrom.textContent = data;
@@ -40,43 +44,16 @@
         });
     });
 
+    window.onload=function(){
+        Split({
+            rowGutters: [{
+                track: 1,
+                element: document.querySelector('.horizontal-gutter'),
+            }]
+        });
 
-    </script>
-</head>
-
-<body style="overflow: hidden">
-
-<div>
-    <form id="search_form" action="">
-        <div id="title">SQL</div>
-        <div>
-<!--            <textarea rows="8" cols="100" id="query"></textarea>-->
-            <div id="query" style="height: 150px;"></div>
-            <div class="search_controls">
-                <input type="submit" value="Submit Query">
-                Output
-                <select id="accept">
-                    <option value="">TSV</option>
-                    <option value="text/csv">CSV</option>
-                    <option value="application/json">JSON</option>
-                </select>
-            </div>
-        </div>
-    </form>
-
-
-    <hr>
-    <div class="result_controls">
-        <button id="copy">Copy Results</button>
-    </div>
-<!--    <pre><code id="search_results" style="overflow-y: auto;"></code></pre>-->
-    <div id="search_results" style="height: 350px;"></div>
-</div>
-
-<script src="js/ace-1.4.4.js" type="text/javascript" charset="utf-8"></script>
-<script type="text/javascript" >
         ace.config.set("basePath", "js");
-        var editor = ace.edit("query");
+        window.editor = ace.edit("query");
         //editor.setTheme("ace/theme/monokai");
         editor.setTheme("ace/theme/terminal");
         //editor.setTheme("ace/theme/clouds_midnight");
@@ -85,7 +62,7 @@
         editor.session.setUseWrapMode(true);
         editor.setShowPrintMargin(false);
 
-        var results = ace.edit("search_results");
+        window.results = ace.edit("results");
         results.setTheme("ace/theme/terminal");
         results.session.setMode("ace/mode/typescript");
         results.session.setUseWrapMode(true);
@@ -93,7 +70,31 @@
         results.setOptions({readOnly: true, highlightActiveLine: false, highlightGutterLine: false});
         results.renderer.$cursorLayer.element.style.display = "none";
         results.setShowPrintMargin(false);
-</script>
+    }
+    </script>
+</head>
+
+<body style="overflow: hidden">
+
+<div class="grid">
+    <div id="title">SQL</div>
+    <div id="query"></div>
+    <div class="query_controls">
+        <button id="submit">Submit Query</button>
+        Output
+        <select id="accept">
+            <option value="">TSV</option>
+            <option value="text/csv">CSV</option>
+            <option value="application/json">JSON</option>
+        </select>
+    </div>
+    <div class="horizontal-gutter"></div>
+    <div class="result_controls">
+        <button id="copy">Copy Results</button>
+    </div>
+    <div id="results"></div>
+
+</div>
 
 </body>
 </html>

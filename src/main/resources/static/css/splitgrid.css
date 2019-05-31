@@ -1,0 +1,15 @@
+html, body, .grid {
+    height: 100%;
+    padding: 0;
+}
+
+.grid {
+    display: grid;
+
+    grid-template-rows: 19px 1fr 30px 5px 30px 1fr;
+}
+
+.horizontal-gutter {
+    grid-area: 4 / 1 / 4 / 1;
+    border: solid 1px black;
+}

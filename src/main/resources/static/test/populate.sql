@@ -109,3 +109,4 @@ insert into person(firstName, lastName, address, zip) values('first 97', 'last 9
 insert into person(firstName, lastName, address, zip) values('first 98', 'last 98', 'address 98', 98);
 insert into person(firstName, lastName, address, zip) values('first 99', 'last 99', 'address 99', 99);
 insert into person(firstName, lastName, address, zip) values('first 100', 'last 100', 'address 100', 100);
+select * from person;

@@ -1,0 +1,78 @@
+
+<!DOCTYPE html>
+<html>
+<head>
+    <meta http-equiv="content-type" content="text/html; charset=UTF-8">
+    <title>split-grid.js example</title>
+
+    <link rel="stylesheet" type="text/css" href="css/index.css">
+    <link rel="stylesheet" type="text/css" href="css/splitgrid.css">
+    <script type="text/javascript" src="https://unpkg.com/split-grid@1.0.9/dist/split-grid.js"></script>
+    <script type="text/javascript" src="js/jquery-3.4.1.min.js"></script>
+    <script src="js/ace-1.4.4.js" type="text/javascript" charset="utf-8"></script>
+    <style id="compiled-css" type="text/css">
+      html, body, .grid {
+      height: 100%;
+      padding: 0;
+    }
+
+    .grid {
+      display: grid;
+
+      grid-template-columns: 1fr;
+      grid-template-rows: 1fr 40px 1fr;
+
+    }
+
+    .horizontal-gutter {
+      grid-area: 2 / 1 / 2 / 1;
+        border: solid 1px red;
+
+
+    }
+  </style>
+    <script type="text/javascript">
+    window.onload=function(){
+    Split({
+        rowGutters: [{
+            track: 1,
+            element: document.querySelector('.horizontal-gutter'),
+        }]
+    });
+
+    ace.config.set("basePath", "js");
+
+    var editor = ace.edit("query");
+    //editor.setTheme("ace/theme/monokai");
+    editor.setTheme("ace/theme/terminal");
+    //editor.setTheme("ace/theme/clouds_midnight");
+    //editor.setTheme("ace/theme/chaos");
+    editor.session.setMode("ace/mode/sql");
+    editor.session.setUseWrapMode(true);
+    editor.setShowPrintMargin(false);
+
+
+    var results = ace.edit("results");
+    results.setTheme("ace/theme/terminal");
+    results.session.setMode("ace/mode/typescript");
+    results.session.setUseWrapMode(true);
+    results.setReadOnly(true);
+    results.setOptions({readOnly: true, highlightActiveLine: false, highlightGutterLine: false});
+    results.renderer.$cursorLayer.element.style.display = "none";
+    results.setShowPrintMargin(false);
+}
+</script>
+
+</head>
+<body>
+<div class="grid">
+    <div id="query">
+    </div>
+    <div id="results"></div>
+    <div class="horizontal-gutter">
+    </div>
+
+</div>
+
+</body>
+</html>
