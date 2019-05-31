@@ -1,0 +1,124 @@
+@media (prefers-color-scheme: dark) {
+
+}
+
+html {
+  --text-color-normal: #0a244d;
+  --text-color-light: #8cabd9;
+}
+
+html[data-theme='dark'] {
+  --text-color-normal: hsl(210, 10%, 62%);
+  --text-color-light: hsl(210, 15%, 35%);
+  --text-color-richer: hsl(210, 50%, 72%);
+  --text-color-highlight: hsl(25, 70%, 45%);
+}
+
+* {
+    overflow: none;
+    //font-family: Arial, Helvetica, sans-serif;
+    //font-size: 18px;
+}
+body {
+    font-family: Arial, Helvetica, sans-serif;
+    background-color: black;
+    color: white;
+}
+
+#title {
+    padding-bottom: 4px;
+}
+
+.result_controls {
+    margin-bottom: 6px;
+}
+
+.search_controls {
+    font-size: 12px;
+}
+
+* {
+    scrollbar-color: dark;
+}
+
+#query {
+    width:100%
+    height:200px;
+    margin-bottom: 8px;
+}
+#search_form {
+    //margin-bottom: 12px;
+}
+pre {
+    width:100%;
+    height:200px;
+    overflow: none;
+    overflow-y: auto;
+    background-color: #dddddd;
+}
+code {
+    width:100%;
+    height:100%;
+    overflow: none;
+    overflow-y: auto;
+}
+hr {
+    height: 0px;
+    margin: 0;
+    margin-top: 8px;
+    margin-bottom: 8px;
+    border: 0;
+    border-bottom: 1px solid #333333;
+    font-size: 1px;
+    width:100%
+}
+
+button, input[type=submit], select {
+  background: #102838;
+  background-image: -webkit-linear-gradient(top, #102838, #426a82);
+  background-image: -moz-linear-gradient(top, #102838, #426a82);
+  background-image: -ms-linear-gradient(top, #102838, #426a82);
+  background-image: -o-linear-gradient(top, #102838, #426a82);
+  background-image: linear-gradient(to bottom, #102838, #426a82);
+  -webkit-border-radius: 2;
+  -moz-border-radius: 2;
+  border-radius: 2px;
+  font-family: Arial;
+  color: #ffffff;
+  font-size: 12px;
+  padding: 3px 8px 3px 8px;
+  text-decoration: none;
+}
+
+select {
+  padding: 6px 8px 6px 8px;
+}
+
+button:hover, input[type=submit]:hover, select {
+  background: #275a7a;
+  background-image: -webkit-linear-gradient(top, #275a7a, #213b4d);
+  background-image: -moz-linear-gradient(top, #275a7a, #213b4d);
+  background-image: -ms-linear-gradient(top, #275a7a, #213b4d);
+  background-image: -o-linear-gradient(top, #275a7a, #213b4d);
+  background-image: linear-gradient(to bottom, #275a7a, #213b4d);
+  text-decoration: none;
+}
+
+html {
+    scrollbar-face-color: #646464;
+    scrollbar-base-color: #646464;
+    scrollbar-3dlight-color: #646464;
+    scrollbar-highlight-color: #646464;
+    scrollbar-track-color: #000;
+    scrollbar-arrow-color: #000;
+    scrollbar-shadow-color: #646464;
+    scrollbar-dark-shadow-color: #646464;
+}
+
+::-webkit-scrollbar { width: 8px; height: 3px; }
+::-webkit-scrollbar-button {  background-color: #666; }
+::-webkit-scrollbar-track {  background-color: #646464; }
+::-webkit-scrollbar-track-piece { background-color: #000; }
+::-webkit-scrollbar-thumb { height: 50px; background-color: #666; border-radius: 3px; }
+::-webkit-scrollbar-corner { background-color: #646464; }
+::-webkit-resizer { background-color: #666; }

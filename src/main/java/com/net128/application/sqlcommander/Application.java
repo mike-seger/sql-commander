@@ -51,12 +51,15 @@ public class Application extends SpringBootServletInitializer {
 
 		public class SqlQuery {
 			private String query;
+			private String accept;
 			public void setQuery(String query) {
 				this.query = query;
 			}
 			String getQuery() {
 				return query;
 			}
+			public void setAccept(String accept) { this.accept = accept; }
+			String getAccept() { return accept; }
 		}
 
 		@GetMapping({"/sql", "/"})
@@ -65,10 +68,10 @@ public class Application extends SpringBootServletInitializer {
 		}
 
 		@PostMapping("/sql")
-		public void postSql(SqlQuery sqlQuery, HttpServletResponse response, @RequestHeader("Accept") String accept) throws IOException {
+		public void postSql(SqlQuery sqlQuery, HttpServletResponse response) throws IOException {
 			String sql=sqlQuery.getQuery().trim().replaceAll(";$", "");
 			if(sql.toLowerCase().startsWith("select")) {
-				sqlService.executeSql(sql, response.getOutputStream(), accept);
+				sqlService.executeSql(sql, response.getOutputStream(), sqlQuery.getAccept());
 			} else {
 				sqlService.updateSql(sql, response.getOutputStream());
 			}
@@ -95,14 +98,14 @@ public class Application extends SpringBootServletInitializer {
 
 	@Service
 	public class SqlService {
-		void executeSql(String sql, OutputStream os, String mimeType) {
+		void executeSql(String sql, OutputStream os, String outputMimeType) {
 			sql = sql.trim().replaceAll(";$", "");
 			try (Connection connection = dataSource.getConnection()) {
 				ResultSet rs = connection.createStatement().executeQuery(sql);
-				if (MediaType.APPLICATION_JSON.getType().equals(mimeType)) {
+				if (MediaType.APPLICATION_JSON.toString().equals(outputMimeType)) {
 					new StreamingJsonResultSetExtractor(os).extractData(rs);
 				} else {
-					boolean tabDelimited = !"text/csv".equals(mimeType);
+					boolean tabDelimited = !"text/csv".equals(outputMimeType);
 					new StreamingCsvResultSetExtractor(os, tabDelimited).extractData(rs);
 				}
 			} catch (AbortedException e) {

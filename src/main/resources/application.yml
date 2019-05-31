@@ -29,3 +29,8 @@ spring:
     jackson:
         serialization:
             indent_output: true
+    h2:
+        console:
+            enaabled: true
+            path: /h2
+
