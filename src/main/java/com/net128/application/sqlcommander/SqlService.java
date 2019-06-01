@@ -66,7 +66,7 @@ class SqlService {
                 new ResourceDatabasePopulator(false,
                 true, StandardCharsets.UTF_8.name(), resource);
             databasePopulator.execute(dataSource);
-            pos.println("<OK>");
+            pos.println("Success\n<OK>");
             return true;
         } catch (Exception e) {
             pos.println(e.getMessage());

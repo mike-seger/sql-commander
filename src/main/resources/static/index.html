@@ -101,15 +101,21 @@
             }
         }
 
-        submission = function() {
-            var query=window.editor.getValue();
+        function postQuery(query) {
             $.post('/sql',{query:query})
             .done(function(data){ showResult(data, true); })
             .fail(function(data){ showResult(data, false); });
-            return false;
-        };
+        }
 
-        $("#submit").click(submission);
+        $("#submit").click(function() {
+            postQuery(window.editor.getValue());
+            return false;
+        });
+
+        $("#submit_selected").click(function() {
+            postQuery(window.editor.getSelectedText());
+            return false;
+        });
     });
 
     window.onload=function(){
@@ -143,10 +149,11 @@
     <div id="query"></div>
     <div class="query_controls">
         <button id="submit">Run</button>
+        <button id="submit_selected">Run selection</button>
     </div>
     <div class="horizontal-gutter"></div>
     <div class="result_controls">
-        Copy data as:
+        Copy data to clipboard:&nbsp;
         <button id="copy_tsv">TSV</button>
         <button id="copy_csv">CSV</button>
         <button id="copy_json">JSON</button>

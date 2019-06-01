@@ -46,8 +46,9 @@ body, html {
     height: 100%;
 }
 
-#results_table1 {
-    display: none;
+.result_controls {
+    ccdisplay: flex;
+    text-align: right;
 }
 
 button, input[type=submit], select {
