@@ -37,9 +37,17 @@ body, html {
     scrollbar-color: dark;
 }
 
-#query, #results {
+#query, #results, results_table {
     width:100%
     padding-bottom: 8px;
+}
+
+.filling_container {
+    height: 100%;
+}
+
+#results_table1 {
+    display: none;
 }
 
 button, input[type=submit], select {

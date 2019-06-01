@@ -7,60 +7,122 @@
     <meta HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=UTF-8">
     <meta http-equiv="Content-Style-Type" content="text/css">
 
-    <script src="https://unpkg.com/split-grid/dist/split-grid.js"></script>
-
     <link rel="stylesheet" type="text/css" href="css/index.css">
     <link rel="stylesheet" type="text/css" href="css/splitgrid.css">
+    <link rel="stylesheet" type="text/css" href="css/tabulator.css">
+
+    <link href="https://unpkg.com/tabulator-tables@4.2.7/dist/css/tabulator.min.css" rel="stylesheet">
+    <script type="text/javascript" src="https://unpkg.com/tabulator-tables@4.2.7/dist/js/tabulator.min.js"></script>
+
+    <script type="text/javascript" src="https://unpkg.com/split-grid/dist/split-grid.js"></script>
     <script type="text/javascript" src="js/jquery-3.4.1.min.js"></script>
-    <script src="js/ace-1.4.4.js" type="text/javascript" charset="utf-8"></script>
+    <script type="text/javascript" src="js/ace/ace-1.4.4.js"></script>
+    <script type="text/javascript" src="js/d3.v5.min.js"></script>
     <script type="text/javascript">
+    function copy2Clipboard(data) {
+        let copyFrom = document.createElement("textarea");
+        document.body.appendChild(copyFrom);
+        copyFrom.textContent = data;
+        copyFrom.select();
+        document.execCommand("copy");
+        copyFrom.remove();
+    }
+
+    function array_move(arr, old_index, new_index) {
+        if (new_index >= arr.length) {
+            var k = new_index - arr.length + 1;
+            while (k--) {
+                arr.push(undefined);
+            }
+        }
+        arr.splice(new_index, 0, arr.splice(old_index, 1)[0]);
+        return arr; // for testing
+    };
+
     $(function() {
+        function tsv2Table(data) {
+            var parsedData=d3.tsvParse(data);
+            var tableData = [];
+            for (var i = 0; i < parsedData.length; i++) {
+                var json = JSON.stringify(parsedData[i]);
+                json=json.replace('{', '{"--":'+(i+1)+',');
+                tableData.push(JSON.parse(json));
+            }
+
+            var table = new Tabulator("#results_table", {
+                data:tableData,
+                autoColumns:true,
+                resizableColumns:false,
+                layout:"fitDataFill"
+            });
+            table.redraw(true);
+
+            var columns = table.getColumnDefinitions();
+            var i;
+            for (i = 0; i < columns.length; i++) {
+                if(columns[i].title==="--") {
+                    columns[i].title="";
+                    break;
+                }
+            }
+            if(i<columns.length) {
+                columns=array_move(columns, i, 0);
+            }
+            table.setColumns(columns);
+
+            $("#copy_tsv").click(function() {
+                copy2Clipboard(d3.tsvFormat(parsedData));
+            });
+            $("#copy_csv").click(function() {
+                copy2Clipboard(d3.csvFormat(parsedData));
+            });
+            $("#copy_json").click(function() {
+                copy2Clipboard(JSON.stringify(parsedData).replace(/},{/g,"},\n{"));
+            });
+        }
+
+        function showResult(data, success) {
+            if(!success) {
+                data="Error\nHTTP Status: "+
+                    +data.status.toString()+"\n"
+                    +"Response: \""+data.responseText.replace(/\n/g," ")
+                        .replace(/"/g,"\\\"")+"\”\n"
+                    ;
+            }
+            window.results.setValue(data, -1);
+            var main_grid = document.getElementById("main_grid");
+            if(success) {
+                document.getElementById("results").style.display = "none";
+                document.getElementById("results_table").style.display = "block";
+                tsv2Table(data);
+            } else {
+                document.getElementById("results_table").style.display = "none";
+                document.getElementById("results").style.display = "block";
+            }
+        }
+
         submission = function() {
-            //var query = $('#query').val();
             var query=window.editor.getValue();
-            var accept = $('#accept').val();
-            $.post('/sql',{query:query, accept:accept})
-            .done(function(data){
-                window.results.setValue(data, -1);
-            })
-            .fail(function(data){ window.results.setValue(data, -1); });
+            $.post('/sql',{query:query})
+            .done(function(data){ showResult(data, true); })
+            .fail(function(data){ showResult(data, false); });
             return false;
         };
 
-        $("#query_form").bind('submit',submission);
         $("#submit").click(submission);
-        $("#accept").change(submission);
-    });
-
-    $(function() {
-        $("#copy").click(function() {
-            var data = results.getValue(); //$('#results').text();
-            let copyFrom = document.createElement("textarea");
-            document.body.appendChild(copyFrom);
-            copyFrom.textContent = data;
-            copyFrom.select();
-            document.execCommand("copy");
-            copyFrom.remove();
-        });
     });
 
     window.onload=function(){
-        Split({
-            rowGutters: [{
-                track: 1,
-                element: document.querySelector('.horizontal-gutter'),
-            }]
+        ace.config.set("basePath", "js/ace");
+        //good themes: terminal, chaos, clouds_midnight, monokai
+        window.editor = ace.edit("query", {
+            theme: "ace/theme/terminal",
+            mode: "ace/mode/sql",
+            minLines: 50,
+            showPrintMargin: false
         });
 
-        ace.config.set("basePath", "js");
-        window.editor = ace.edit("query");
-        //editor.setTheme("ace/theme/monokai");
-        editor.setTheme("ace/theme/terminal");
-        //editor.setTheme("ace/theme/clouds_midnight");
-        //editor.setTheme("ace/theme/chaos");
-        editor.session.setMode("ace/mode/sql");
         editor.session.setUseWrapMode(true);
-        editor.setShowPrintMargin(false);
 
         window.results = ace.edit("results");
         results.setTheme("ace/theme/terminal");
@@ -76,24 +138,21 @@
 
 <body style="overflow: hidden">
 
-<div class="grid">
+<div class="grid" id="main_grid">
     <div id="title">SQL</div>
     <div id="query"></div>
     <div class="query_controls">
-        <button id="submit">Submit Query</button>
-        Output
-        <select id="accept">
-            <option value="">TSV</option>
-            <option value="text/csv">CSV</option>
-            <option value="application/json">JSON</option>
-        </select>
+        <button id="submit">Run</button>
     </div>
     <div class="horizontal-gutter"></div>
     <div class="result_controls">
-        <button id="copy">Copy Results</button>
+        Copy data as:
+        <button id="copy_tsv">TSV</button>
+        <button id="copy_csv">CSV</button>
+        <button id="copy_json">JSON</button>
     </div>
     <div id="results"></div>
-
+    <div id="results_table"></div>
 </div>
 
 </body>
