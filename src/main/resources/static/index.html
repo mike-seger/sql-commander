@@ -92,6 +92,11 @@
             window.results.setValue(data, -1);
             var main_grid = document.getElementById("main_grid");
             if(success) {
+                if(data.trim().length == 0) {
+                    data+="\nNo results found";
+                } else if(data.trim().indexOf("\n")<0) {
+                    data=data.trim()+"\n"+data.trim().replace(/[^\t]*/g,"");
+                }
                 document.getElementById("results").style.display = "none";
                 document.getElementById("results_table").style.display = "block";
                 tsv2Table(data);
