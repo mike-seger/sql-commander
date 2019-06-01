@@ -14,70 +14,6 @@ html[data-theme='dark'] {
   --text-color-highlight: hsl(25, 70%, 45%);
 }
 
-* {
-    overflow: none;
-}
-body, html {
-    font-family: Arial, Helvetica, sans-serif;
-    background-color: black;
-    color: white;
-    padding: 0;
-    margin: 0;
-    border: 0;
-    margin-bottom: 10px;
-}
-
-
-.query_controls, .result_controls {
-    margin-top: 4px;
-    font-size: 12px;
-}
-
-* {
-    scrollbar-color: dark;
-}
-
-#query, #results, results_table {
-    width:100%
-    padding-bottom: 8px;
-}
-
-.filling_container {
-    height: 100%;
-}
-
-.result_controls {
-    ccdisplay: flex;
-    text-align: right;
-}
-
-button, input[type=submit], select {
-  background: #102838;
-  background-image: -webkit-linear-gradient(top, #102838, #426a82);
-  background-image: -moz-linear-gradient(top, #102838, #426a82);
-  background-image: -ms-linear-gradient(top, #102838, #426a82);
-  background-image: -o-linear-gradient(top, #102838, #426a82);
-  background-image: linear-gradient(to bottom, #102838, #426a82);
-  -webkit-border-radius: 2;
-  -moz-border-radius: 2;
-  border-radius: 2px;
-  font-family: Arial;
-  color: #ffffff;
-  font-size: 12px;
-  padding: 3px 8px 3px 8px;
-  text-decoration: none;
-}
-
-button:hover, input[type=submit]:hover, select {
-  background: #275a7a;
-  background-image: -webkit-linear-gradient(top, #275a7a, #213b4d);
-  background-image: -moz-linear-gradient(top, #275a7a, #213b4d);
-  background-image: -ms-linear-gradient(top, #275a7a, #213b4d);
-  background-image: -o-linear-gradient(top, #275a7a, #213b4d);
-  background-image: linear-gradient(to bottom, #275a7a, #213b4d);
-  text-decoration: none;
-}
-
 html {
     scrollbar-face-color: #646464;
     scrollbar-base-color: #646464;
@@ -96,3 +32,121 @@ html {
 ::-webkit-scrollbar-thumb { height: 50px; background-color: #666; border-radius: 3px; }
 ::-webkit-scrollbar-corner { background-color: #646464; }
 ::-webkit-resizer { background-color: #666; }
+
+* {
+    overflow: none;
+}
+body, html {
+    font-family: Arial, Helvetica, sans-serif;
+    background-color: black;
+    color: white;
+    padding: 0;
+    margin: 0;
+    border: 0;
+    margin-bottom: 10px;
+}
+
+.query_controls, .result_controls, .title {
+    font-size: 12px;
+    background-color: #3C3F41;
+    padding: 2px;
+}
+
+.title {
+    padding: 3px;
+}
+
+.editor {
+    height:100%;
+    width:100%;
+}
+
+* {
+    scrollbar-color: dark;
+}
+
+#query, #results, results_table {
+    width:100%
+    padding-bottom: 4px;
+}
+
+.result_controls {
+    text-align: right;
+}
+
+button, input[type=submit], select {
+    font-size: 13px;
+	border-radius: 3px;
+	border: 0;
+	background-color: #162040;
+	color: white;
+	margin: 2px;
+}
+
+button:hover {
+	filter: brightness(75%);
+}
+
+.play {
+	background-color: #4C8F2B;
+	background-color: green;
+	color: white;
+}
+
+.action {
+	background-color: #00000000;
+}
+
+.action:hover {
+	background-color: #00000022;
+}
+
+.action div {
+    float: left;
+    width: 50%;
+    font-size: 8px;
+    color: orange;
+}
+
+.action:after {
+    content: "";
+    display: table;
+    clear: both;
+}
+
+
+
+.tooltip {
+    position: relative;
+    display: inline-block;
+    border-bottom: 1px dotted black;
+}
+
+.tooltip .tooltiptext {
+    content: attr(tooltip-content);
+    font-size: 10px;
+    visibility: hidden;
+    xxwidth: 120px;
+    white-space: nowrap;
+    background-color: #333333F0;
+    color: #bbb;
+    text-align: left;
+    border-radius: 6px;
+    padding: 5px;
+    position: absolute;
+    z-index: 1000;
+    bottom: 100%;
+    left: 50%;
+    margin-left: -60px;
+
+    /* Fade in tooltip - takes 1 second to go from 0% to 100% opac: */
+    opacity: 0;
+    transition: opacity 1s;
+}
+
+.tooltip:hover .tooltiptext {
+    visibility: visible;
+    opacity: 1;
+}
+
+

@@ -3,11 +3,12 @@
 <html lang="en">
 
 <head>
-    <title>SQL Query</title>
+    <title>SQL Commander</title>
     <meta HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=UTF-8">
     <meta http-equiv="Content-Style-Type" content="text/css">
 
     <link rel="stylesheet" type="text/css" href="css/index.css">
+    <link rel="stylesheet" type="text/css" href="css/tooltips.css">
     <link rel="stylesheet" type="text/css" href="css/splitgrid.css">
     <link rel="stylesheet" type="text/css" href="css/tabulator.css">
 
@@ -28,7 +29,7 @@
         copyFrom.remove();
     }
 
-    function array_move(arr, old_index, new_index) {
+    function moveArrayItem(arr, old_index, new_index) {
         if (new_index >= arr.length) {
             var k = new_index - arr.length + 1;
             while (k--) {
@@ -36,91 +37,101 @@
             }
         }
         arr.splice(new_index, 0, arr.splice(old_index, 1)[0]);
-        return arr; // for testing
-    };
+        return arr;
+    }
 
-    $(function() {
-        function tsv2Table(data) {
-            var parsedData=d3.tsvParse(data);
-            var tableData = [];
-            for (var i = 0; i < parsedData.length; i++) {
-                var json = JSON.stringify(parsedData[i]);
-                json=json.replace('{', '{"--":'+(i+1)+',');
-                tableData.push(JSON.parse(json));
-            }
-
-            var table = new Tabulator("#results_table", {
-                data:tableData,
-                autoColumns:true,
-                resizableColumns:false,
-                layout:"fitDataFill"
-            });
-            table.redraw(true);
-
-            var columns = table.getColumnDefinitions();
-            var i;
-            for (i = 0; i < columns.length; i++) {
-                if(columns[i].title==="--") {
-                    columns[i].title="";
-                    break;
-                }
-            }
-            if(i<columns.length) {
-                columns=array_move(columns, i, 0);
-            }
-            table.setColumns(columns);
-
-            $("#copy_tsv").click(function() {
-                copy2Clipboard(d3.tsvFormat(parsedData));
-            });
-            $("#copy_csv").click(function() {
-                copy2Clipboard(d3.csvFormat(parsedData));
-            });
-            $("#copy_json").click(function() {
-                copy2Clipboard(JSON.stringify(parsedData).replace(/},{/g,"},\n{"));
-            });
+    function tsv2Table(data) {
+        var parsedData=d3.tsvParse(data);
+        var tableData = [];
+        for (var i = 0; i < parsedData.length; i++) {
+            var json = JSON.stringify(parsedData[i]);
+            json=json.replace('{', '{"--":'+(i+1)+',');
+            tableData.push(JSON.parse(json));
         }
 
-        function showResult(data, success) {
-            if(!success) {
-                data="Error\nHTTP Status: "+
-                    +data.status.toString()+"\n"
-                    +"Response: \""+data.responseText.replace(/\n/g," ")
-                        .replace(/"/g,"\\\"")+"\”\n"
-                    ;
-            }
-            window.results.setValue(data, -1);
-            var main_grid = document.getElementById("main_grid");
-            if(success) {
-                if(data.trim().length == 0) {
-                    data+="\nNo results found";
-                } else if(data.trim().indexOf("\n")<0) {
-                    data=data.trim()+"\n"+data.trim().replace(/[^\t]*/g,"");
-                }
-                document.getElementById("results").style.display = "none";
-                document.getElementById("results_table").style.display = "block";
-                tsv2Table(data);
-            } else {
-                document.getElementById("results_table").style.display = "none";
-                document.getElementById("results").style.display = "block";
+        var table = new Tabulator("#results_table", {
+            data:tableData,
+            autoColumns:true,
+            resizableColumns:false,
+            layout:"fitDataFill"
+        });
+        table.redraw(true);
+
+        var columns = table.getColumnDefinitions();
+        var i;
+        for (i = 0; i < columns.length; i++) {
+            if(columns[i].title==="--") {
+                columns[i].title="";
+                break;
             }
         }
+        if(i<columns.length) {
+            columns=moveArrayItem(columns, i, 0);
+        }
+        table.setColumns(columns);
 
-        function postQuery(query) {
+        $("#copy_tsv").click(function() {
+            copy2Clipboard(d3.tsvFormat(parsedData));
+        });
+        $("#copy_csv").click(function() {
+            copy2Clipboard(d3.csvFormat(parsedData));
+        });
+        $("#copy_json").click(function() {
+            copy2Clipboard(JSON.stringify(parsedData).replace(/},{/g,"},\n{"));
+        });
+    }
+
+    function showResult(data, success) {
+        if(!success) {
+            data="Error\nHTTP Status: "+
+                +data.status.toString()+"\n"
+                +"Response: \""+data.responseText.replace(/\n/g," ")
+                    .replace(/"/g,"\\\"")+"\”\n"
+                ;
+        }
+        window.results.setValue(data, -1);
+        var main_grid = document.getElementById("main_grid");
+        if(success) {
+            if(data.trim().length == 0) {
+                data+="\nNo results found";
+            } else if(data.trim().indexOf("\n")<0) {
+                data=data.trim()+"\n"+data.trim().replace(/[^\t]*/g,"");
+            }
+            document.getElementById("results").style.display = "none";
+            document.getElementById("results_table").style.display = "block";
+            tsv2Table(data);
+        } else {
+            document.getElementById("results_table").style.display = "none";
+            document.getElementById("results").style.display = "block";
+        }
+    }
+
+    function postQuery(query) {
+        if(query.trim().length > 0) {
             $.post('/sql',{query:query})
             .done(function(data){ showResult(data, true); })
             .fail(function(data){ showResult(data, false); });
         }
+    }
 
-        $("#submit").click(function() {
-            postQuery(window.editor.getValue());
-            return false;
-        });
+    function runQuery() {
+        postQuery(window.editor.getValue());
+        return false;
+    }
 
-        $("#submit_selected").click(function() {
-            postQuery(window.editor.getSelectedText());
-            return false;
-        });
+    function runSelectedQuery() {
+        var selectedText=window.editor.getSelectedText();
+        if(selectedText.trim().length == 0) {
+            var selectedLine = editor.getSelectionRange().start.row;
+            selectedText = editor.session.getLine(selectedLine);
+        }
+        postQuery(selectedText);
+        return false;
+    }
+
+    $(function() {
+        $("#submit").click(runQuery);
+        $("#submit_selected").click(runSelectedQuery);
     });
 
     window.onload=function(){
@@ -143,6 +154,19 @@
         results.setOptions({readOnly: true, highlightActiveLine: false, highlightGutterLine: false});
         results.renderer.$cursorLayer.element.style.display = "none";
         results.setShowPrintMargin(false);
+
+        editor.focus();
+        editor.gotoLine(1);
+
+        editor.commands.addCommand({
+            name: 'run',
+            bindKey: {
+                win: 'Alt-R',
+                mac: 'Option-R',
+                sender: 'editor|cli'
+            },
+            exec: function() { runSelectedQuery(); return true; }
+        });
     }
     </script>
 </head>
@@ -150,18 +174,20 @@
 <body style="overflow: hidden">
 
 <div class="grid" id="main_grid">
-    <div id="title">SQL Commander</div>
-    <div id="query"></div>
+    <div class="title">SQL Commander</div>
+    <div class="selection">
+        <div class="editor" id="query" style=""></div>
+    </div>
     <div class="query_controls">
-        <button id="submit">Run</button>
-        <button id="submit_selected">Run selection</button>
+        <button data-tooltip="Run SQL from editor" class="play" id="submit">▶</button>
+        <button data-tooltip="Run selected SQL &#xa; from editor" class="play" id="submit_selected">▶.</button>
     </div>
     <div class="horizontal-gutter"></div>
     <div class="result_controls">
-        Copy data to clipboard:&nbsp;
-        <button id="copy_tsv">TSV</button>
-        <button id="copy_csv">CSV</button>
-        <button id="copy_json">JSON</button>
+            <button data-tooltip-left data-tooltip="Add data as TSV" class="action" id="copy_tsv"><div>&#128203;</div><div>TSV</div></button>
+            <button data-tooltip-left data-tooltip="Add data as CSV" class="action" id="copy_csv"><div>&#128203;</div><div>CSV</div></button>
+            <button data-tooltip-left data-tooltip="Add data as JSON" class="action" id="copy_json"><div>&#128203;</div><div>JSON</div></button>
+        </div>
     </div>
     <div id="results"></div>
     <div id="results_table"></div>
