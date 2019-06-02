@@ -6,7 +6,7 @@ html, body, .grid {
 .grid {
     display: grid;
     align-items: stretch;
-    grid-template-rows: 20px 0.5fr 26px 0px 26px 1fr 0;
+    grid-template-rows: 20px 0.5fr 26px 10px 26px 1fr 0;
 }
 
 .horizontal-gutter {
@@ -14,5 +14,5 @@ html, body, .grid {
     border: solid 1px black;
     border: 0;
     background-color: #3C3F41;
-    height: 0;
+    background-color: black;
 }

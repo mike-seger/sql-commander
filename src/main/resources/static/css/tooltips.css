@@ -18,9 +18,8 @@
 /* Position tooltip above the element */
 [data-tooltip]:before {
     position: absolute;
-    bottom: 150%;
+    bottom: 125%;
     left: 50%;
-    margin-bottom: 0px;
     margin-left: -10px;
     padding: 7px;
     min-width: 100px;

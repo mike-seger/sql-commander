@@ -1,4 +1,4 @@
-<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<!DOCTYPE html>
 
 <html lang="en">
 
@@ -35,18 +35,11 @@
     </div>
     <div class="horizontal-gutter"></div>
     <div class="result_controls">
-        <button data-tooltip-left data-tooltip="Copy data as TSV &#xa; to clipboard" class="action" id="copy_tsv">
-            <div>&#128203;</div>
-            <div>TSV</div>
-        </button>
-        <button data-tooltip-left data-tooltip="Copy data as CSV &#xa; to clipboard" class="action" id="copy_csv">
-            <div>&#128203;</div>
-            <div>CSV</div>
-        </button>
-        <button data-tooltip-left data-tooltip="Copy data as JSON &#xa; to clipboard" class="action" id="copy_json">
-            <div>&#128203;</div>
-            <div>JSON</div>
-        </button>
+        <div class="copy_clip">
+            <button data-tooltip-left data-tooltip="Copy data as TSV &#xa; to clipboard" id="copy_tsv">&#128203;TSV</button>
+            <button data-tooltip-left data-tooltip="Copy data as CSV &#xa; to clipboard" id="copy_csv">&#128203;CSV</button>
+            <button data-tooltip-left data-tooltip="Copy data as JSON &#xa; to clipboard" id="copy_json">&#128203;JSON</button>
+        </div>
     </div>
     <div id="results"></div>
     <div id="results_table"></div>

@@ -96,33 +96,18 @@ button:hover {
 	color: white;
 }
 
-.action {
-    width: 45px;
-    padding: 3px 2px 3px 3px;
+.copy_clip button  {
 	background-color: #00000000;
+	font-size: 60%;
+	color: orange;
 }
 
-.action:hover {
+.copy_clip button::first-letter {
+    font-size: 170%;
+    color: blue;
+}
+
+.copy_clip button:hover {
 	background-color: #00000022;
 }
 
-.action div {
-    float: left;
-    width: 50%;
-    font-size: 8px;
-    margin-left: 0px;
-    margin-bottom: -9px;
-    color: orange;
-    height: 20px;
-    margin-left: -5px;
-}
-
-.action div:first-child {
-    margin-left: -3px;
-}
-
-.action:after {
-    content: "";
-    display: table;
-    clear: both;
-}
