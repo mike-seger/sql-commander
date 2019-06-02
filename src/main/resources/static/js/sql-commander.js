@@ -141,10 +141,20 @@ function createResultView() {
     return results
 }
 
+function createSplit() {
+    Split({
+      rowGutters: [{
+        track: 1,
+        element: document.querySelector('#horizontal-splitter'),
+      }]
+    });
+}
+
 window.onload=function(){
-    ace.config.set("basePath", "js/ace");
+    ace.config.set("basePath", "libs/ace");
     window.results = createResultView();
     window.editor = createEditor();
+    //createSplit();
     document.getElementById("submit").onclick=runQuery;
     document.getElementById("submit_selected").onclick=runSelectedQuery;
 }

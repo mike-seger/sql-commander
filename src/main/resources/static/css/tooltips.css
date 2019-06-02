@@ -5,7 +5,7 @@
     outline: hidden;
 }
 
-/* Hide the tooltip content by default */
+/* Hide the data-tooltip content by default */
 [data-tooltip]:before,
 [data-tooltip]:after {
     visibility: hidden;
@@ -15,7 +15,7 @@
     pointer-events: none;
 }
 
-/* Position tooltip above the element */
+/* Position data-tooltip above the element */
 [data-tooltip]:before {
     position: absolute;
     bottom: 125%;
@@ -36,14 +36,15 @@
     line-height: 1.2;
 }
 
-[data-tooltip-left]:before {
+[data-tooltip-l]:before,
+.copy_clip [data-tooltip]:before {
     margin-left: -100px;
 }
 
-/* Triangle hack to make tooltip look like a speech bubble */
+/* Triangle hack to make data-tooltip look like a speech bubble */
 [data-tooltip]:after {
     position: absolute;
-    bottom: 150%;
+    bottom: 105%;
     left: 50%;
     margin-left: -5px;
     width: 0;
@@ -56,7 +57,7 @@
     line-height: 0;
 }
 
-/* Show tooltip content on hover */
+/* Show data-tooltip content on hover */
 [data-tooltip]:hover:before,
 [data-tooltip]:hover:after {
     visibility: visible;
