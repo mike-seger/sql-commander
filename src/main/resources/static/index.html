@@ -7,171 +7,91 @@
     <meta HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=UTF-8">
     <meta http-equiv="Content-Style-Type" content="text/css">
 
-    <link rel="stylesheet" type="text/css" href="css/index.css">
-    <link rel="stylesheet" type="text/css" href="css/tooltips.css">
+    <link rel="stylesheet" type="text/css" href="css/sql-commander.css">
     <link rel="stylesheet" type="text/css" href="css/splitgrid.css">
     <link rel="stylesheet" type="text/css" href="css/tabulator.css">
-
     <link href="https://unpkg.com/tabulator-tables@4.2.7/dist/css/tabulator.min.css" rel="stylesheet">
-    <script type="text/javascript" src="https://unpkg.com/tabulator-tables@4.2.7/dist/js/tabulator.min.js"></script>
+    <link rel="stylesheet" type="text/css" href="css/tooltips.css">
 
+    <script type="text/javascript" src="https://unpkg.com/tabulator-tables@4.2.7/dist/js/tabulator.min.js"></script>
     <script type="text/javascript" src="https://unpkg.com/split-grid/dist/split-grid.js"></script>
     <script type="text/javascript" src="js/jquery-3.4.1.min.js"></script>
     <script type="text/javascript" src="js/ace/ace-1.4.4.js"></script>
     <script type="text/javascript" src="js/d3.v5.min.js"></script>
-    <script type="text/javascript">
-    function copy2Clipboard(data) {
-        let copyFrom = document.createElement("textarea");
-        document.body.appendChild(copyFrom);
-        copyFrom.textContent = data;
-        copyFrom.select();
-        document.execCommand("copy");
-        copyFrom.remove();
-    }
+    <script type="text/javascript" src="js/sql-commander.js"></script>
 
-    function moveArrayItem(arr, old_index, new_index) {
-        if (new_index >= arr.length) {
-            var k = new_index - arr.length + 1;
-            while (k--) {
-                arr.push(undefined);
-            }
-        }
-        arr.splice(new_index, 0, arr.splice(old_index, 1)[0]);
-        return arr;
-    }
+    <style type="text/css">
+        [data-tooltip] {
+    position: relative;
+    z-index: 20000;
+    cursor: pointer;
+    xxoutline:none;
+}
 
-    function tsv2Table(data) {
-        var parsedData=d3.tsvParse(data);
-        var tableData = [];
-        for (var i = 0; i < parsedData.length; i++) {
-            var json = JSON.stringify(parsedData[i]);
-            json=json.replace('{', '{"--":'+(i+1)+',');
-            tableData.push(JSON.parse(json));
-        }
+/* Hide the tooltip content by default */
+[data-tooltip]:before,
+[data-tooltip]:after {
+    visibility: hidden;
+    -ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=0)";
+    filter: progid: DXImageTransform.Microsoft.Alpha(Opacity=0);
+    opacity: 0;
+    pointer-events: none;
+}
 
-        var table = new Tabulator("#results_table", {
-            data:tableData,
-            autoColumns:true,
-            resizableColumns:false,
-            layout:"fitDataFill"
-        });
-        table.redraw(true);
+/* Position tooltip above the element */
+[data-tooltip]:before {
+    position: absolute;
+    bottom: 150%;
+    left: 50%;
+    margin-bottom: 0px;
+    margin-left: -10px;
+    padding: 7px;
+    min-width: 100px;
+    -webkit-border-radius: 3px;
+    -moz-border-radius: 3px;
+    border-radius: 3px;
+    background-color: #000;
+    background-color: hsla(0, 0%, 20%, 0.9);
+    color: #fff;
+    content: attr(data-tooltip);
+    text-align: center;
+    white-space: pre-wrap;
+    font-size: 10px;
+    line-height: 1.2;
+}
 
-        var columns = table.getColumnDefinitions();
-        var i;
-        for (i = 0; i < columns.length; i++) {
-            if(columns[i].title==="--") {
-                columns[i].title="";
-                break;
-            }
-        }
-        if(i<columns.length) {
-            columns=moveArrayItem(columns, i, 0);
-        }
-        table.setColumns(columns);
+[data-tooltip-left]:before {
+    margin-left: -100px;
+}
 
-        $("#copy_tsv").click(function() {
-            copy2Clipboard(d3.tsvFormat(parsedData));
-        });
-        $("#copy_csv").click(function() {
-            copy2Clipboard(d3.csvFormat(parsedData));
-        });
-        $("#copy_json").click(function() {
-            copy2Clipboard(JSON.stringify(parsedData).replace(/},{/g,"},\n{"));
-        });
-    }
+/* Triangle hack to make tooltip look like a speech bubble */
+[data-tooltip]:after {
+    position: absolute;
+    bottom: 150%;
+    left: 50%;
+    margin-left: -5px;
+    width: 0;
+    border-top: 5px solid #000;
+    border-top: 5px solid hsla(0, 0%, 20%, 0.9);
+    border-right: 5px solid transparent;
+    border-left: 5px solid transparent;
+    content: " ";
+    font-size: 0;
+    line-height: 0;
+}
 
-    function showResult(data, success) {
-        if(!success) {
-            data="Error\nHTTP Status: "+
-                +data.status.toString()+"\n"
-                +"Response: \""+data.responseText.replace(/\n/g," ")
-                    .replace(/"/g,"\\\"")+"\”\n"
-                ;
-        }
-        window.results.setValue(data, -1);
-        var main_grid = document.getElementById("main_grid");
-        if(success) {
-            if(data.trim().length == 0) {
-                data+="\nNo results found";
-            } else if(data.trim().indexOf("\n")<0) {
-                data=data.trim()+"\n"+data.trim().replace(/[^\t]*/g,"");
-            }
-            document.getElementById("results").style.display = "none";
-            document.getElementById("results_table").style.display = "block";
-            tsv2Table(data);
-        } else {
-            document.getElementById("results_table").style.display = "none";
-            document.getElementById("results").style.display = "block";
-        }
-    }
-
-    function postQuery(query) {
-        if(query.trim().length > 0) {
-            $.post('/sql',{query:query})
-            .done(function(data){ showResult(data, true); })
-            .fail(function(data){ showResult(data, false); });
-        }
-    }
-
-    function runQuery() {
-        postQuery(window.editor.getValue());
-        return false;
-    }
-
-    function runSelectedQuery() {
-        var selectedText=window.editor.getSelectedText();
-        if(selectedText.trim().length == 0) {
-            var selectedLine = editor.getSelectionRange().start.row;
-            selectedText = editor.session.getLine(selectedLine);
-        }
-        postQuery(selectedText);
-        return false;
-    }
-
-    $(function() {
-        $("#submit").click(runQuery);
-        $("#submit_selected").click(runSelectedQuery);
-    });
-
-    window.onload=function(){
-        ace.config.set("basePath", "js/ace");
-        //good themes: terminal, chaos, clouds_midnight, monokai
-        window.editor = ace.edit("query", {
-            theme: "ace/theme/terminal",
-            mode: "ace/mode/sql",
-            minLines: 50,
-            showPrintMargin: false
-        });
-
-        editor.session.setUseWrapMode(true);
-
-        window.results = ace.edit("results");
-        results.setTheme("ace/theme/terminal");
-        results.session.setMode("ace/mode/typescript");
-        results.session.setUseWrapMode(true);
-        results.setReadOnly(true);
-        results.setOptions({readOnly: true, highlightActiveLine: false, highlightGutterLine: false});
-        results.renderer.$cursorLayer.element.style.display = "none";
-        results.setShowPrintMargin(false);
-
-        editor.focus();
-        editor.gotoLine(1);
-
-        editor.commands.addCommand({
-            name: 'run',
-            bindKey: {
-                win: 'Alt-R',
-                mac: 'Option-R',
-                sender: 'editor|cli'
-            },
-            exec: function() { runSelectedQuery(); return true; }
-        });
-    }
-    </script>
+/* Show tooltip content on hover */
+[data-tooltip]:hover:before,
+[data-tooltip]:hover:after {
+    visibility: visible;
+    -ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=100)";
+    filter: progid: DXImageTransform.Microsoft.Alpha(Opacity=100);
+    opacity: 1;
+}
+    </style>
 </head>
 
-<body style="overflow: hidden">
+<body>
 
 <div class="grid" id="main_grid">
     <div class="title">SQL Commander</div>
@@ -180,14 +100,22 @@
     </div>
     <div class="query_controls">
         <button data-tooltip="Run SQL from editor" class="play" id="submit">▶</button>
-        <button data-tooltip="Run selected SQL &#xa; from editor" class="play" id="submit_selected">▶.</button>
+        <button data-tooltip="Run selected SQL&#xa;from editor&#xa;(Alt-R)" class="play" id="submit_selected">▶.</button>
     </div>
     <div class="horizontal-gutter"></div>
     <div class="result_controls">
-            <button data-tooltip-left data-tooltip="Add data as TSV" class="action" id="copy_tsv"><div>&#128203;</div><div>TSV</div></button>
-            <button data-tooltip-left data-tooltip="Add data as CSV" class="action" id="copy_csv"><div>&#128203;</div><div>CSV</div></button>
-            <button data-tooltip-left data-tooltip="Add data as JSON" class="action" id="copy_json"><div>&#128203;</div><div>JSON</div></button>
-        </div>
+        <button data-tooltip-left data-tooltip="Add data as TSV&#xa;to clipboard" class="action" id="copy_tsv">
+            <div>&#128203;</div>
+            <div>TSV</div>
+        </button>
+        <button data-tooltip-left data-tooltip="Add data as CSV&#xa;to clipboard" class="action" id="copy_csv">
+            <div>&#128203;</div>
+            <div>CSV</div>
+        </button>
+        <button data-tooltip-left data-tooltip="Add data as JSON&#xa;to clipboard" class="action" id="copy_json">
+            <div>&#128203;</div>
+            <div>JSON</div>
+        </button>
     </div>
     <div id="results"></div>
     <div id="results_table"></div>

@@ -34,7 +34,7 @@ html {
 ::-webkit-resizer { background-color: #666; }
 
 * {
-    overflow: none;
+    overflow: hidden;
 }
 body, html {
     font-family: Arial, Helvetica, sans-serif;
@@ -94,6 +94,8 @@ button:hover {
 }
 
 .action {
+    width: 45px;
+    padding: 3px 2px 3px 3px;
 	background-color: #00000000;
 }
 
@@ -105,7 +107,15 @@ button:hover {
     float: left;
     width: 50%;
     font-size: 8px;
+    margin-left: 0px;
+    margin-bottom: -9px;
     color: orange;
+    height: 20px;
+    margin-left: -5px;
+}
+
+.action div:first-child {
+    margin-left: -3px;
 }
 
 .action:after {
@@ -113,40 +123,3 @@ button:hover {
     display: table;
     clear: both;
 }
-
-
-
-.tooltip {
-    position: relative;
-    display: inline-block;
-    border-bottom: 1px dotted black;
-}
-
-.tooltip .tooltiptext {
-    content: attr(tooltip-content);
-    font-size: 10px;
-    visibility: hidden;
-    xxwidth: 120px;
-    white-space: nowrap;
-    background-color: #333333F0;
-    color: #bbb;
-    text-align: left;
-    border-radius: 6px;
-    padding: 5px;
-    position: absolute;
-    z-index: 1000;
-    bottom: 100%;
-    left: 50%;
-    margin-left: -60px;
-
-    /* Fade in tooltip - takes 1 second to go from 0% to 100% opac: */
-    opacity: 0;
-    transition: opacity 1s;
-}
-
-.tooltip:hover .tooltiptext {
-    visibility: visible;
-    opacity: 1;
-}
-
-

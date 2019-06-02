@@ -7,7 +7,7 @@ The main purpose is to provide an SQL client as a single JAR file. It allows to 
 mvn spring-boot:run
 
 ## Execute SQL queries using web browser
-The application provides a simple SQL query form under:
+The application provides a simple SQL UI under:
 http://localhost:11515/
 
 ## Test using included sample scripts
