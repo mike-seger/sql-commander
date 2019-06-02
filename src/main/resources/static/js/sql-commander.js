@@ -28,18 +28,20 @@ function tsv2Table(data) {
     }
 
     var table = new Tabulator("#results_table", {
-        data:tableData,
-        autoColumns:true,
-        resizableColumns:false,
-        layout:"fitDataFill"
+        data:tableData
+        , autoColumns:true
+        , resizableColumns:false
+        //, layout:"fitColumns"
+        //, responsiveLayout:true
+        , layout:"fitDataFill"
     });
-    table.redraw(true);
 
     var columns = table.getColumnDefinitions();
     var i;
     for (i = 0; i < columns.length; i++) {
         if(columns[i].title==="--") {
             columns[i].title="";
+            columns[i].frozen=true;
             break;
         }
     }
@@ -54,6 +56,10 @@ function tsv2Table(data) {
         function() {copy2Clipboard(d3.csvFormat(parsedData)); };
     document.getElementById("copy_json").onclick=
         function() {copy2Clipboard(JSON.stringify(parsedData).replace(/},{/g,"},\n{")); };
+
+ /*   window.addEventListener('resize', function(){
+        table.redraw(true); //trigger full rerender including all data and rows
+    });*/
 }
 
 function showResult(data, success) {
