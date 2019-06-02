@@ -114,7 +114,7 @@ button:hover {
 
 .copy_clip button::first-letter {
     font-size: 170%;
-    color: blue;
+    color: #dddddd;
 }
 
 .copy_clip button:hover {
