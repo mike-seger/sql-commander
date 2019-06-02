@@ -110,4 +110,10 @@ insert into person(firstName, lastName, address, zip) values('first 98', 'last 9
 insert into person(firstName, lastName, address, zip) values('first 99', 'last 99', 'address 99', 99);
 insert into person(firstName, lastName, address, zip) values('first 100', 'last 100', 'address 100', 100);
 select * from person;
-select p.*,p.address||' fgdfg' as a2,p.address||' fg45654dfg' as a3,p.address||' fg5664dfg' as extaddress from person p;
+select p.*,p.address||' fgdsdfgs 1234567890 sdfg sdfgfg' as a2,
+    p.address||' fg45gsdfgdfg 1234567890 sfgsdfgsdfg 1234567890 sdfgsd654dfg' as a3,
+    p.address||' fg45gsdfgdfg 1234567890 sfgsdfgsdfg 1234567890 sdfgsd654dfg' as a4,
+    p.address||' fg45gsdfgdfg 1234567890 sfgsdfgsdfg 1234567890 sdfgsd654dfg' as a5,
+    p.address||' fg45gsdfgdfg 1234567890 sfgsdfgsdfg 1234567890 sdfgsd654dfg' as a6,
+    p.address||' fg5664dfg' as extaddress
+    from person p;
