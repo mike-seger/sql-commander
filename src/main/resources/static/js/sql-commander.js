@@ -47,6 +47,13 @@ function tsv2Table(data) {
         columns=moveArrayItem(columns, i, 0);
     }
     table.setColumns(columns);
+
+    document.getElementById("copy_tsv").onclick=
+        function() {copy2Clipboard(d3.tsvFormat(parsedData)); };
+    document.getElementById("copy_csv").onclick=
+        function() {copy2Clipboard(d3.csvFormat(parsedData)); };
+    document.getElementById("copy_json").onclick=
+        function() {copy2Clipboard(JSON.stringify(parsedData).replace(/},{/g,"},\n{")); };
 }
 
 function showResult(data, success) {
@@ -140,11 +147,4 @@ window.onload=function(){
     window.editor = createEditor();
     document.getElementById("submit").onclick=runQuery;
     document.getElementById("submit_selected").onclick=runSelectedQuery;
-
-    document.getElementById("copy_tsv").onclick=
-        function() {copy2Clipboard(d3.tsvFormat(parsedData)); };
-    document.getElementById("copy_csv").onclick=
-        function() {copy2Clipboard(d3.csvFormat(parsedData)); };
-    document.getElementById("copy_json").onclick=
-        function() {copy2Clipboard(JSON.stringify(parsedData).replace(/},{/g,"},\n{")); };
 }
