@@ -8,90 +8,21 @@
     <meta http-equiv="Content-Style-Type" content="text/css">
 
     <link rel="stylesheet" type="text/css" href="css/sql-commander.css">
+    <link rel="stylesheet" type="text/css" href="css/tooltips.css">
     <link rel="stylesheet" type="text/css" href="css/splitgrid.css">
     <link rel="stylesheet" type="text/css" href="css/tabulator.css">
-    <link href="https://unpkg.com/tabulator-tables@4.2.7/dist/css/tabulator.min.css" rel="stylesheet">
-    <link rel="stylesheet" type="text/css" href="css/tooltips.css">
 
+    <link href="https://unpkg.com/tabulator-tables@4.2.7/dist/css/tabulator.min.css" rel="stylesheet">
     <script type="text/javascript" src="https://unpkg.com/tabulator-tables@4.2.7/dist/js/tabulator.min.js"></script>
+
     <script type="text/javascript" src="https://unpkg.com/split-grid/dist/split-grid.js"></script>
     <script type="text/javascript" src="js/jquery-3.4.1.min.js"></script>
     <script type="text/javascript" src="js/ace/ace-1.4.4.js"></script>
     <script type="text/javascript" src="js/d3.v5.min.js"></script>
     <script type="text/javascript" src="js/sql-commander.js"></script>
-
-    <style type="text/css">
-        [data-tooltip] {
-    position: relative;
-    z-index: 20000;
-    cursor: pointer;
-    xxoutline:none;
-}
-
-/* Hide the tooltip content by default */
-[data-tooltip]:before,
-[data-tooltip]:after {
-    visibility: hidden;
-    -ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=0)";
-    filter: progid: DXImageTransform.Microsoft.Alpha(Opacity=0);
-    opacity: 0;
-    pointer-events: none;
-}
-
-/* Position tooltip above the element */
-[data-tooltip]:before {
-    position: absolute;
-    bottom: 150%;
-    left: 50%;
-    margin-bottom: 0px;
-    margin-left: -10px;
-    padding: 7px;
-    min-width: 100px;
-    -webkit-border-radius: 3px;
-    -moz-border-radius: 3px;
-    border-radius: 3px;
-    background-color: #000;
-    background-color: hsla(0, 0%, 20%, 0.9);
-    color: #fff;
-    content: attr(data-tooltip);
-    text-align: center;
-    white-space: pre-wrap;
-    font-size: 10px;
-    line-height: 1.2;
-}
-
-[data-tooltip-left]:before {
-    margin-left: -100px;
-}
-
-/* Triangle hack to make tooltip look like a speech bubble */
-[data-tooltip]:after {
-    position: absolute;
-    bottom: 150%;
-    left: 50%;
-    margin-left: -5px;
-    width: 0;
-    border-top: 5px solid #000;
-    border-top: 5px solid hsla(0, 0%, 20%, 0.9);
-    border-right: 5px solid transparent;
-    border-left: 5px solid transparent;
-    content: " ";
-    font-size: 0;
-    line-height: 0;
-}
-
-/* Show tooltip content on hover */
-[data-tooltip]:hover:before,
-[data-tooltip]:hover:after {
-    visibility: visible;
-    -ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=100)";
-    filter: progid: DXImageTransform.Microsoft.Alpha(Opacity=100);
-    opacity: 1;
-}
-    </style>
 </head>
 
-<body>
+<body style="overflow: hidden">
 
 <div class="grid" id="main_grid">
     <div class="title">SQL Commander</div>
@@ -100,19 +31,19 @@
     </div>
     <div class="query_controls">
         <button data-tooltip="Run SQL from editor" class="play" id="submit">▶</button>
-        <button data-tooltip="Run selected SQL&#xa;from editor&#xa;(Alt-R)" class="play" id="submit_selected">▶.</button>
+        <button data-tooltip="Run selected SQL &#xa; from editor" class="play" id="submit_selected">▶.</button>
     </div>
     <div class="horizontal-gutter"></div>
     <div class="result_controls">
-        <button data-tooltip-left data-tooltip="Add data as TSV&#xa;to clipboard" class="action" id="copy_tsv">
+        <button data-tooltip-left data-tooltip="Add data as TSV" class="action" id="copy_tsv">
             <div>&#128203;</div>
             <div>TSV</div>
         </button>
-        <button data-tooltip-left data-tooltip="Add data as CSV&#xa;to clipboard" class="action" id="copy_csv">
+        <button data-tooltip-left data-tooltip="Add data as CSV" class="action" id="copy_csv">
             <div>&#128203;</div>
             <div>CSV</div>
         </button>
-        <button data-tooltip-left data-tooltip="Add data as JSON&#xa;to clipboard" class="action" id="copy_json">
+        <button data-tooltip-left data-tooltip="Add data as JSON" class="action" id="copy_json">
             <div>&#128203;</div>
             <div>JSON</div>
         </button>

@@ -2,7 +2,7 @@
     position: relative;
     z-index: 20000;
     cursor: pointer;
-    outline:none;
+    outline: hidden;
 }
 
 /* Hide the tooltip content by default */

@@ -34,7 +34,7 @@ html {
 ::-webkit-resizer { background-color: #666; }
 
 * {
-    overflow: hidden;
+    overflow: none;
 }
 body, html {
     font-family: Arial, Helvetica, sans-serif;
@@ -81,7 +81,10 @@ button, input[type=submit], select {
 	background-color: #162040;
 	color: white;
 	margin: 2px;
+	outline: hidden;
 }
+
+button:focus {outline:0;}
 
 button:hover {
 	filter: brightness(75%);
