@@ -13,7 +13,7 @@ if [[ $# == 0 ]] ;then
 fi
 
 dt=date
-if [[ -x $(which gdate) ]] ; then
+if [[ -x $(which gdate 2>/dev/null) ]] ; then
     dt=gdate
 fi
 

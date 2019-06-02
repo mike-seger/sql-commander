@@ -15,6 +15,7 @@ server:
 #    jetty:
 #        acceptors: "${server.max-treads}"
     port: 11515
+    address: 127.0.0.1
 spring:
     custom:
         datasource:
