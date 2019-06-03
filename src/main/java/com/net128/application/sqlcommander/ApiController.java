@@ -5,7 +5,6 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RestController;
 
-import javax.activation.MimeType;
 import javax.inject.Inject;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
@@ -19,7 +18,7 @@ public class ApiController {
     @PostMapping(value = "/select",
         consumes = "text/plain",
         produces = {"text/csv", "application/json", "text/tab-separated-values"})
-    public void executeSql(@RequestBody String sql, HttpServletResponse response, @RequestHeader("Accept") MimeType accept) throws IOException {
+    public void executeSql(@RequestBody String sql, HttpServletResponse response, @RequestHeader("Accept") String accept) throws IOException {
         sqlService.executeSql(sql, response.getOutputStream(), accept);
     }
 

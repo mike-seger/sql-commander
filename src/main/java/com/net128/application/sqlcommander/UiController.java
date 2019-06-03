@@ -6,7 +6,6 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 
-import javax.activation.MimeType;
 import javax.inject.Inject;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
@@ -19,15 +18,15 @@ public class UiController {
 
     public class SqlQuery {
         private String query;
-        private MimeType accept;
+        private String accept;
         public void setQuery(String query) {
             this.query = query;
         }
         String getQuery() {
             return query;
         }
-        public void setAccept(MimeType accept) { this.accept = accept; }
-        MimeType getAccept() { return accept; }
+        public void setAccept(String accept) { this.accept = accept; }
+        String getAccept() { return accept; }
     }
 
     @GetMapping({"/sql", "/"})

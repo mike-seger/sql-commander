@@ -20,7 +20,6 @@ import org.springframework.jdbc.core.ResultSetExtractor;
 import org.springframework.jdbc.datasource.init.ResourceDatabasePopulator;
 import org.springframework.stereotype.Service;
 
-import javax.activation.MimeType;
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
 import javax.sql.DataSource;
@@ -37,7 +36,7 @@ class SqlService {
     @Lazy
     private DataSource dataSource;
 
-    boolean executeSql(String sql, OutputStream os, MimeType outputMimeType) {
+    boolean executeSql(String sql, OutputStream os, String outputMimeType) {
         sql = sql.trim().replaceAll(";$", "");
         try (Connection connection = dataSource.getConnection()) {
             ResultSet rs = connection.createStatement().executeQuery(sql);
