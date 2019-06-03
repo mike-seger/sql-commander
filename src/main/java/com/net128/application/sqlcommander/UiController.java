@@ -34,6 +34,11 @@ public class UiController {
         return "index.html";
     }
 
+    @GetMapping({"/plain"})
+    public String sqlPlain() {
+        return "plain/index.html";
+    }
+
     @PostMapping("/sql")
     public ResponseEntity postSql(SqlQuery sqlQuery, HttpServletResponse response) throws IOException {
         String sql=sqlQuery.getQuery().trim().replaceAll(";$", "");
