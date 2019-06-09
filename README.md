@@ -1,11 +1,12 @@
 # sql-commander
 
 A standalone SQL utility hosted within a Spring Boot application.  
-The main purpose is to provide an SQL client as a single file,  
-without any external dependencies, other than Java.  
-The SQL client has both a CLI and a simple web UI.  
-It allows to access a DB in environments, where no DB clients are available or  
-to which not remote DB connections are possible.  
+The main purpose of this is to provide an SQL client as a single file,  
+without any external dependencies, other than a JRE 8+.  
+  
+The SQL client provides both a CLI and a simple web UI.  
+It allows to access DBs in environments, where no DB clients are  
+available or to which no remote DB connections are possible.  
 
 ## Run the application
 mvn spring-boot:run
@@ -26,7 +27,7 @@ $ ./sql-select-follow.sh @script/test/select.sql /tmp/output
 $ ./sql.sh @test/drop.sql    # Drop the test table
 ```
 
-## Running the included bash scripts directly from the running application
+## Running the included bash scripts directly from the running application without unpacking
 ```
 bash <<<$(curl -s localhost:11515/sql.sh) 
 ```
@@ -45,8 +46,8 @@ $ curl -s localhost:11515/runscript?resourceUrl=classpath:/static/test/populate.
 ## Example datasource definitions
 The pom includes 3 driver dependencies by default: H2, Postgres, Mysql/MariaDB.  
 You can use your own drivers instead.  
-Without setting any properties, sql-commander will use an H2 in-memory DB configuration.  
-Below are some example configurations, which you can add into e.g. config/application.properties.
+When not setting any properties, sql-commander will use an H2 in-memory DB configuration.  
+Below are some example configurations, which you can add into e.g. config/application.properties.  
 They should give you an idea how to create a configuration for your database.
 
 ### Postgres
