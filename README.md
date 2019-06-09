@@ -8,7 +8,7 @@ a single file, without any external dependencies, other than a JRE 8+.
 It allows to access DBs in environments, where no DB clients are  
 installed or to which no remote DB connections are possible.  
 
-## Run the application
+## Running the application
 mvn spring-boot:run
 
 ## Execute SQL queries using a web browser
@@ -16,7 +16,7 @@ The application provides a simple UI under:
 http://localhost:11515/
 
 ## Test using included sample scripts
-In a terminal, you may use commands like the following
+In a separate terminal, you may use commands like the following
 ```
 $ cd src/main/resources/static
 $ ./sql.sh @test/create.sql  # Create a test table
@@ -45,8 +45,8 @@ $ curl -s localhost:11515/runscript?resourceUrl=classpath:/static/test/populate.
 
 ## Example datasource definitions
 The pom includes 3 driver dependencies by default: H2, Postgres, Mysql/MariaDB.  
-You can use your own drivers instead.  
-When not setting any properties, **sql-commander** will use an H2 in-memory DB configuration.  
+You may use your own drivers instead, see **Other database drivers**.  
+When not setting any properties, **sql-commander** will use the H2 in-memory DB configuration.  
 Below are some example configurations, which you can add into e.g. config/application.properties.  
 These should give you an idea how to create a configuration for your database.
 
