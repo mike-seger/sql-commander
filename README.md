@@ -51,7 +51,7 @@ When not setting any properties, **sql-commander** will use the dafault H2 in-me
 DB configuration. You can override this with your own in e.g. config/application.properties.  
   
 Below are some example configurations, which should give you an idea,  
-how to create a configuration for your database.
+how to create your own configuration.
 
 ### Postgres
 ```
