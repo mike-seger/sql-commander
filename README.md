@@ -87,7 +87,7 @@ MariaDB [(none)]> exit
 $ mysql -u commander -p commanderdb
 ```
 
-### Other databases
+### Other database drivers
 
 In order to use databases other than the default included, you may do one of the following:
 - add a dependency to the driver in pom.xml and build the jar again
