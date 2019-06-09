@@ -101,5 +101,5 @@ In order to use an external driver location, you must start the application as f
 ```
 java -jar sql-commander.jar
 ```
-This allows to put any additional jdbc drivers into the directory: **driver**
-This location is defined in loader.properties.
+This allows to put any additional jdbc drivers into the directory: **driver**.  
+This location can be overridden in loader.properties.
