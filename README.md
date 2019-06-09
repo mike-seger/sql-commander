@@ -46,6 +46,7 @@ $ curl -s localhost:11515/runscript?resourceUrl=classpath:/static/test/populate.
 ## Example datasource definitions
 The pom.xml includes 3 driver dependencies by default: H2, Postgres, Mysql/MariaDB.  
 You may include your own drivers instead, see **Other database drivers**.  
+  
 When not setting any properties, **sql-commander** will use the H2 in-memory DB configuration.  
 You can override this with your own in e.g. config/application.properties.  
 Below are some example configurations, which should give you an idea,  
