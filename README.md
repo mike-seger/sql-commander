@@ -1,9 +1,11 @@
 # sql-commander
 
-An standalone SQL utility hosted within a Spring Boot application.  
-The main purpose is to provide an SQL client as a single file, without any external dependencies, other than Java.  
+A standalone SQL utility hosted within a Spring Boot application.  
+The main purpose is to provide an SQL client as a single file,  
+without any external dependencies, other than Java.  
 The SQL client has both a CLI and a simple web UI.  
-It allows to access a DB in environments, where no DB clients are available or to which not remote DB connections are possible.  
+It allows to access a DB in environments, where no DB clients are available or  
+to which not remote DB connections are possible.  
 
 ## Run the application
 mvn spring-boot:run
