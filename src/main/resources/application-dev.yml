@@ -5,3 +5,5 @@ spring:
   resources:
     static-locations: file:src/main/resources/static/
     cache.cachecontrol.max-age: 0
+  main:
+    lazy-initialization: true
