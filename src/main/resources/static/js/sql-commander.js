@@ -156,11 +156,36 @@ function createSplit() {
     });
 }
 
+function queriesKey() {
+    var key= "queies."+location.port;
+    return key;
+}
+
+function loadQueries() {
+    if(window.editor) {
+        var text=window.localStorage.getItem(queriesKey());
+        if(text) {
+            window.editor.setValue(text, -1);
+        }
+    }
+}
+
+function saveQueries() {
+    if(window.editor) {
+        window.localStorage.setItem(queriesKey(), window.editor.getValue());
+    }
+}
+
 window.onload=function(){
     ace.config.set("basePath", "libs/ace");
     window.results = createResultView();
     window.editor = createEditor();
+    loadQueries();
     //createSplit();
     document.getElementById("submit").onclick=runQuery;
     document.getElementById("submit_selected").onclick=runSelectedQuery;
+}
+
+window.onunload=function(){
+    saveQueries();
 }
