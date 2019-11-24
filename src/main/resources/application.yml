@@ -43,6 +43,6 @@ spring:
 #      path: /h2
 
 spring.banner.image.bitdepth: 8
-spring.banner.image.pixelmode: block
+#spring.banner.image.pixelmode: block
 
 spring.h2.console.enabled: false
