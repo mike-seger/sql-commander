@@ -41,13 +41,6 @@ function tsv2Table(data) {
 	var dataMutator=function(value, data, type, params, component) {
 		value = value.replace(/\\n/g, "\n").replace(/\\t/g, "\t");
 		return value;
-		//value - original value of the cell
-		//data - the data for the row
-		//type - the type of mutation occurring  (data|edit)
-		//params - the mutatorParams object from the column definition
-		//component - when the "type" argument is "edit", this contains the cell component for the edited cell, otherwise it is the column component for the column
-
-		//return value > mutatorParams.threshold; //return the new value for the cell data.
 	}
 
 	var columns = table.getColumnDefinitions();
@@ -76,30 +69,13 @@ function tsv2Table(data) {
 		function() {copy2Clipboard(d3.csvFormat(parsedData)); };
 	document.getElementById("copy_json").onclick=
 		function() {copy2Clipboard(JSON.stringify(parsedData).replace(/},{/g,"},\n{")); };
-
- /*   window.addEventListener('resize', function(){
-		table.redraw(true); //trigger full rerender including all data and rows
-	});*/
 }
 
 function showResult(data, success) {
 	if(!success) {
-	  /*  var responseText=data.responseText;
-		if(!responseText.startsWith("{")) {
-			responseText = {
-				response: data.responseText
-			}
-		}
-		var responseObject=JSON.parse(responseText);*/
-		data="Error\n"+/*"Error\t\nHTTP Status\t"+
-			+data.status.toString()+"\n"
-			+*/flatObjectString(data)
-//            +"Response: \""+data.responseText.replace(/\n/g," ")
-//                .replace(/"/g,"\\\"")+"\”\n"
-			;
+		data="Error\n"+flatObjectString(data);
 	}
 	window.results.setValue(data, -1);
-	var main_grid = document.getElementById("main_grid");
 	if(success) {
 		if(data.trim().length == 0) {
 			data+="\nNo results found";
@@ -112,9 +88,6 @@ function showResult(data, success) {
 	} else {
 		document.getElementById("results_table").style.display = "none";
 		document.getElementById("results").style.display = "block";
-//        document.getElementById("results").style.display = "none";
-//        document.getElementById("results_table").style.display = "block";
-		//tsv2Table(data);
 	}
 }
 
