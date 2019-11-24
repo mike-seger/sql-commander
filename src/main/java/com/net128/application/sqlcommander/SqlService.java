@@ -34,7 +34,6 @@ class SqlService {
     private static Logger logger = LoggerFactory.getLogger(SqlService.class);
 
     @Inject
-    @Lazy
     private DataSource dataSource;
 
     boolean executeSql(String sql, OutputStream os, String outputMimeType) {
@@ -166,7 +165,6 @@ class SqlService {
 
     @Profile("customds")
     @Configuration
-    @Lazy
     @ConfigurationProperties(prefix = "spring.custom.datasource")
     @SuppressWarnings("unused")
     public class CustomHikariDSConfiguration extends HikariConfig {
