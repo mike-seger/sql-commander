@@ -31,10 +31,6 @@ function tsv2Table(data) {
 		data:tableData
 		, autoColumns:true
 		, resizableColumns:false
-		, variableHeight:true
-		//, layout:"fitColumns"
-		//, responsiveLayout:true
-		, formatter:"textarea"
 		, layout:"fitDataFill"
 	});
 
@@ -77,10 +73,8 @@ function showResult(data, success) {
 	}
 	window.results.setValue(data, -1);
 	if(success) {
-		if(data.trim().length == 0) {
-			data+="\nNo results found";
-		} else if(data.trim().indexOf("\n")<0) {
-			data=data.trim()+"\n"+data.trim().replace(/[^\t]*/g,"");
+		if(data.trim().length == 0 || data.trim().indexOf("\n")<0) {
+			data=data.trim()+"\n∅\t";
 		}
 		document.getElementById("results").style.display = "none";
 		document.getElementById("results_table").style.display = "block";

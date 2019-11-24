@@ -18,6 +18,7 @@ import org.springframework.core.io.InputStreamResource;
 import org.springframework.core.io.Resource;
 import org.springframework.jdbc.core.ResultSetExtractor;
 import org.springframework.jdbc.datasource.init.ResourceDatabasePopulator;
+import org.springframework.jdbc.datasource.init.ScriptStatementFailedException;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Nonnull;
@@ -67,7 +68,6 @@ class SqlService {
             pos.println("Success\n<OK>");
             return true;
         } catch (Exception e) {
-            pos.println(e.getMessage());
             handleSqlExecutionException(e, sql, pos);
             return false;
         }
@@ -75,7 +75,7 @@ class SqlService {
 
     private void handleSqlExecutionException(Exception e, String sql, PrintStream pos) {
         String message = "Failed to execute: " + sql;
-        if(e.getClass().getPackage().getName().startsWith("org.spring")) {
+        if(e.getClass().getPackage().getName().startsWith("org.spring") && ! (e instanceof ScriptStatementFailedException)) {
             throw new RuntimeException(String.format("Error executing:\n\t\t%s", sql.trim()), e);
         } else if (logger.isDebugEnabled() || (!(e instanceof SQLSyntaxErrorException) &&
                 !e.getClass().getName().contains("OracleDatabaseException"))) {
@@ -83,7 +83,7 @@ class SqlService {
         } else {
             logger.error("{}: {}", message, e.getMessage());
         }
-        if(e instanceof SQLException) {
+        if(e instanceof SQLException || e instanceof ScriptStatementFailedException) {
             pos.print(e.getMessage()
                 .replaceAll("[\t\n]", " ")
                 .replaceAll("[ ]+", " ").trim());
