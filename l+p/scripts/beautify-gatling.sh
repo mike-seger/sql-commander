@@ -9,7 +9,7 @@ fi
 
 mysed=sed
 if [[ -x "$(which gsed)" ]] ; then
-    mysed=gsed
+	mysed=gsed
 fi
 
 report_dir="$1"
@@ -41,7 +41,7 @@ done
 #echo "($grepexp)"
 
 egrep -ril "($grepexp)" "$report_dir" | while read f ; do
-    $mysed -i "$sedexp" "${f}"
+	$mysed -i "$sedexp" "${f}"
 done
 
 cp $(dirname "$0")/stat-fond.png "$report_dir/style/stat-fond.png"
