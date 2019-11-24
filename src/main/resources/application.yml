@@ -1,11 +1,12 @@
 management:
-    endpoint:
-        health:
-            show-details: always
-    endpoints:
-        web:
-            exposure:
-                include: '*'
+	endpoint:
+		health:
+			enabled: false
+			show-details: always
+	endpoints:
+		web:
+			exposure:
+				include: '*'
 server:
 #    max-treads: 1024
 #    tomcat:
@@ -14,24 +15,30 @@ server:
 #        worker-threads: "${server.max-treads}"
 #    jetty:
 #        acceptors: "${server.max-treads}"
-    port: 11515
-    address: 127.0.0.1
-spring:
-    custom:
-        datasource:
-            hikari:
-                connectionTestQuery: SELECT 1
-                connectionTimeout: 90000
-                idleTimeout: 150000
-                maximumPoolSize: 200
-                minimumIdle: 2
-                poolName: dbpool
-            type: com.zaxxer.hikari.HikariDataSource
-    jackson:
-        serialization:
-            indent_output: true
-    h2:
-        console:
-            enaabled: true
-            path: /h2
+	port: 11515
+	address: 127.0.0.1
 
+spring:
+	custom:
+		datasource:
+			hikari:
+				connectionTestQuery: SELECT 1
+				connectionTimeout: 90000
+				idleTimeout: 150000
+				minimumPoolSize: 0
+				maximumPoolSize: 200
+				minimumIdle: 0
+				poolName: dbpool
+			type: com.zaxxer.hikari.HikariDataSource
+	jackson:
+		serialization:
+			indent_output: true
+#    h2:
+#        console:
+#            enaabled: false
+#            path: /h2
+
+#spring.banner.image.bitdepth: 8
+#spring.banner.image.pixelmode: block
+
+spring.h2.console.enabled: false

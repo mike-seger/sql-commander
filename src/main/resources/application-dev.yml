@@ -7,3 +7,8 @@ spring:
     cache.cachecontrol.max-age: 0
   main:
     lazy-initialization: true
+
+server.max-treads: 1024
+server.tomcat.max-threads: "${server.max-treads}"
+server.undertow.worker-threads: "${server.max-treads}"
+server.jetty.acceptors: "${server.max-treads}"

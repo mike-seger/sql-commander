@@ -51,8 +51,7 @@ class SqlService {
             logger.error("{} while executing: {} ...", e.getMessage(), sql.substring(0, Math.min(100, sql.length())));
             return false;
         } catch (Exception e) {
-            new PrintStream(os).println(e.getMessage());
-            handleSqlExecutionException(e, sql);
+            handleSqlExecutionException(e, sql, new PrintStream(os));
             return false;
         }
     }
@@ -69,18 +68,25 @@ class SqlService {
             return true;
         } catch (Exception e) {
             pos.println(e.getMessage());
-            handleSqlExecutionException(e, sql);
+            handleSqlExecutionException(e, sql, pos);
             return false;
         }
     }
 
-    private void handleSqlExecutionException(Exception e, String sql) {
+    private void handleSqlExecutionException(Exception e, String sql, PrintStream pos) {
         String message = "Failed to execute: " + sql;
-        if (logger.isDebugEnabled() || (!(e instanceof SQLSyntaxErrorException) &&
+        if(e.getClass().getPackage().getName().startsWith("org.spring")) {
+            throw new RuntimeException(String.format("Error executing:\n\t\t%s", sql.trim()), e);
+        } else if (logger.isDebugEnabled() || (!(e instanceof SQLSyntaxErrorException) &&
                 !e.getClass().getName().contains("OracleDatabaseException"))) {
             logger.error("{}", sql, e);
         } else {
             logger.error("{}: {}", message, e.getMessage());
+        }
+        if(e instanceof SQLException) {
+            pos.print(e.getMessage()
+                .replaceAll("[\t\n]", " ")
+                .replaceAll("[ ]+", " ").trim());
         }
     }
 
@@ -160,10 +166,12 @@ class SqlService {
 
     @Profile("customds")
     @Configuration
+    @Lazy
     @ConfigurationProperties(prefix = "spring.custom.datasource")
     @SuppressWarnings("unused")
     public class CustomHikariDSConfiguration extends HikariConfig {
         @Bean
+        @Lazy
         public DataSource dataSource() {
             return new HikariDataSource(this);
         }
